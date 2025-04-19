@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using oMeli_Back.Context;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("Connection");
+builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
