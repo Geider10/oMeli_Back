@@ -14,20 +14,20 @@ namespace oMeli_Back.Context
             modelBuilder.Entity<UserEntity>(entity => {
                 entity.ToTable("User");
                 entity.HasKey(u => u.Id);
-                entity.Property(u => u.Id).ValueGeneratedOnAdd().IsRequired();
+                entity.Property(u => u.Id).ValueGeneratedOnAdd();
                 entity.Property(u => u.Name).IsRequired().HasMaxLength(50);
                 entity.Property(u => u.LastName).IsRequired().HasMaxLength(50);
                 entity.Property(u => u.Phone).IsRequired().HasMaxLength(20);
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(100);
                 entity.Property(u => u.Password).IsRequired();
-                entity.Property(u => u.Date_Creation).IsRequired(); 
+                entity.Property(u => u.Date_Creation);
             });
 
             modelBuilder.Entity<RoleEntity>(entity =>
             {
                 entity.ToTable("Role");
                 entity.HasKey(r => r.Id);
-                entity.Property(r => r.Id).ValueGeneratedOnAdd().IsRequired();
+                entity.Property(r => r.Id).ValueGeneratedOnAdd();
                 entity.Property(r => r.Name).IsRequired().HasMaxLength(50);
             });
 
@@ -43,6 +43,12 @@ namespace oMeli_Back.Context
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
             });
+
+            modelBuilder.Entity<RoleEntity>().HasData(
+                new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Buyer" },
+                new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Seller" },
+                new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Admin" }
+            );
         }
     }
 }

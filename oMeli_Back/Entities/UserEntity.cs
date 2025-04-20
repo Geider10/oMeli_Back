@@ -9,6 +9,13 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public DateTime Date_Creation { get; set; } // = DateTime.Now;
-        public ICollection<UserRoleEntity> UserRoles { get; set; } 
+        public ICollection<UserRoleEntity> UserRoles { get; set; }
+
+        public UserEntity()
+        {
+            Id = Guid.NewGuid();
+            Date_Creation = DateTime.Now;
+        }
     }
+    
 }
