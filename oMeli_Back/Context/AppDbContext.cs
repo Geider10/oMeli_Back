@@ -8,6 +8,7 @@ namespace oMeli_Back.Context
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<UserRoleEntity> UserRoles { get; set; }
+        public DbSet<PlanEntity> Plan { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,10 +45,60 @@ namespace oMeli_Back.Context
                 .HasForeignKey(ur => ur.RoleId);
             });
 
+          
             modelBuilder.Entity<RoleEntity>().HasData(
                 new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Buyer" },
                 new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Seller" },
                 new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Admin" }
+            );
+            modelBuilder.Entity<PlanEntity>(entity =>
+            {
+                entity.ToTable("Plan");
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Id).ValueGeneratedOnAdd();
+                entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
+                entity.Property(p => p.PublicationLimited).IsRequired();
+                entity.Property(p => p.PublicationCustom).IsRequired();
+                entity.Property(p => p.StoreCustom).IsRequired();
+                entity.Property(p => p.PublicationUnlimited).IsRequired();
+                entity.Property(p => p.ViewStatics).IsRequired();
+                entity.Property(p => p.CSVImport).IsRequired();
+            });
+            modelBuilder.Entity<PlanEntity>().HasData(
+                new PlanEntity
+                {
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                    Name = "Free",
+                    PublicationLimited = 5,
+                    PublicationCustom = false,
+                    StoreCustom = false,
+                    PublicationUnlimited = false,
+                    ViewStatics = false,
+                    CSVImport = false
+                },
+                new PlanEntity
+                {
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                    Name = "Pro",
+                    PublicationLimited = 15,
+                    PublicationCustom = true,
+                    StoreCustom = true,
+                    PublicationUnlimited = false,
+                    ViewStatics = false,
+                    CSVImport = false
+                },
+                new PlanEntity
+                {
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                    Name = "Premium",
+                    PublicationLimited = 15,
+                    PublicationCustom = true,
+                    StoreCustom = true,
+                    PublicationUnlimited = true,
+                    ViewStatics = true,
+                    CSVImport = true
+                }
+
             );
         }
     }
