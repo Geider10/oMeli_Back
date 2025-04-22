@@ -8,8 +8,8 @@ namespace oMeli_Back.Context
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<UserRoleEntity> UserRoles { get; set; }
-        public DbSet<PlanEntity> Plan { get; set; }
-
+        public DbSet<PlanEntity> Plans { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>(entity => {
@@ -100,6 +100,19 @@ namespace oMeli_Back.Context
                 }
 
             );
+
+            modelBuilder.Entity<Subscription>(entity => {
+                entity.ToTable("Subscription");
+                entity.HasKey(s => s.Id);
+                entity.Property(s => s.Id).ValueGeneratedOnAdd();
+                entity.Property(s => s.UserId).IsRequired();
+                entity.Property(s => s.PlanId).IsRequired();
+                entity.Property(s => s.DateStart).IsRequired();
+                entity.Property(s => s.DateEnd);
+                entity.Property(s => s.DateRenovation);
+                entity.Property(s => s.State);
+                entity.Property(s => s.RenovationAutomatic);
+            });
         }
     }
 }
