@@ -10,5 +10,6 @@
         public bool PublicationUnlimited { get; set; }
         public bool ViewStatics { get; set; }
         public bool CSVImport { get; set; }
+        public ICollection<Subscription> Subscriptions { get; set; } 
     }
 }
