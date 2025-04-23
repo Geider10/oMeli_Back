@@ -107,11 +107,11 @@ namespace oMeli_Back.Context
                 entity.Property(s => s.Id).ValueGeneratedOnAdd();
                 entity.Property(s => s.UserId).IsRequired();
                 entity.Property(s => s.PlanId).IsRequired();
-                entity.Property(s => s.DateStart).IsRequired();
+                entity.Property(s => s.DateStart);
                 entity.Property(s => s.DateEnd);
-                entity.Property(s => s.DateRenovation);
-                entity.Property(s => s.State);
-                entity.Property(s => s.RenovationAutomatic);
+                entity.Property(s => s.DateCreation).IsRequired();
+                entity.Property(s => s.State).IsRequired();
+                entity.Property(s => s.Renovation).IsRequired();
             });
         }
     }
