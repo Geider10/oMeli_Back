@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using oMeli_Back.DTOs;
-namespace oMeli_Back.Validators
+using oMeli_Back.DTOs.Auth;
+namespace oMeli_Back.Validators.Auth
 {
     public class SignUpValidator : AbstractValidator<SignUpDto>
     {

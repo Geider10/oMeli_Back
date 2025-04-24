@@ -1,9 +1,9 @@
 ﻿using oMeli_Back.Context;
 using oMeli_Back.Utils;
-using oMeli_Back.DTOs;
 using Microsoft.EntityFrameworkCore;
 using oMeli_Back.Entities;
 using System.Reflection.Metadata.Ecma335;
+using oMeli_Back.DTOs.Auth;
 
 namespace oMeli_Back.Services
 {

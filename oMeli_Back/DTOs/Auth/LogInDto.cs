@@ -1,4 +1,4 @@
-﻿namespace oMeli_Back.DTOs
+﻿namespace oMeli_Back.DTOs.Auth
 {
     public class LogInDto
     {
