@@ -10,8 +10,8 @@
         public string Password { get; set; }
         public DateTime Date_Creation { get; set; }
         //representa relacion y permite navegar entre las tablas
-        public ICollection<UserRoleEntity> UserRoles { get; set; }//muchos a muchos
-        public ICollection<Subscription> Subscriptions { get; set; }//uno a muchos
+        public ICollection<UserRoleEntity> UserRoles { get; set; }
+        public Subscription Subscription { get; set; }
 
         public UserEntity()
         {

@@ -31,72 +31,79 @@ namespace oMeli_Back.Context
                 entity.Property(r => r.Id).ValueGeneratedOnAdd();
                 entity.Property(r => r.Name).IsRequired().HasMaxLength(50);
             });
-
-            modelBuilder.Entity<UserRoleEntity>(entity => {
-                entity.ToTable("UserRole");
-                entity.HasKey(ur => new { ur.UserId, ur.RoleId });
-
-                entity.HasOne<UserEntity>(ur => ur.User)
-                .WithMany(u => u.UserRoles)
-                .HasForeignKey(ur => ur.UserId);
-
-                entity.HasOne<RoleEntity>(ur => ur.Role)
-                .WithMany(r => r.UserRoles)
-                .HasForeignKey(ur => ur.RoleId);
-            });
-
-          
             modelBuilder.Entity<RoleEntity>().HasData(
                 new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Buyer" },
                 new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Seller" },
                 new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Admin" }
             );
+
+            modelBuilder.Entity<UserRoleEntity>(entity => {
+                entity.ToTable("UserRole");
+                entity.HasKey(ur => new { ur.UserId, ur.RoleId });
+                entity.Property(ur => ur.UserId).IsRequired();
+                entity.Property(ur => ur.RoleId).IsRequired();
+
+                entity.HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId);
+            
+                entity.HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId);
+            });
+
+          
+            
             modelBuilder.Entity<PlanEntity>(entity =>
             {
                 entity.ToTable("Plan");
                 entity.HasKey(p => p.Id);
                 entity.Property(p => p.Id).ValueGeneratedOnAdd();
                 entity.Property(p => p.Name).IsRequired().HasMaxLength(50);
-                entity.Property(p => p.PublicationLimited).IsRequired();
+                entity.Property(p => p.StoreCreate).IsRequired();
+                entity.Property(p => p.ProductLimited).IsRequired();
                 entity.Property(p => p.PublicationCustom).IsRequired();
                 entity.Property(p => p.StoreCustom).IsRequired();
-                entity.Property(p => p.PublicationUnlimited).IsRequired();
                 entity.Property(p => p.ViewStatics).IsRequired();
                 entity.Property(p => p.CSVImport).IsRequired();
+                entity.Property(p => p.Priority).IsRequired();
             });
             modelBuilder.Entity<PlanEntity>().HasData(
                 new PlanEntity
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                    Name = "Free",
-                    PublicationLimited = 5,
+                    Name = "Basic",
+                    StoreCreate = true,
+                    ProductLimited = 5,
                     PublicationCustom = false,
                     StoreCustom = false,
-                    PublicationUnlimited = false,
                     ViewStatics = false,
-                    CSVImport = false
+                    CSVImport = false,
+                    Priority = false
                 },
                 new PlanEntity
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
                     Name = "Pro",
-                    PublicationLimited = 15,
+                    StoreCreate = true,
+                    ProductLimited = 15,
                     PublicationCustom = true,
                     StoreCustom = true,
-                    PublicationUnlimited = false,
                     ViewStatics = false,
-                    CSVImport = false
+                    CSVImport = false,
+                    Priority = false
                 },
                 new PlanEntity
                 {
                     Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
                     Name = "Premium",
-                    PublicationLimited = 15,
+                    StoreCreate = true,
+                    ProductLimited = 30,
                     PublicationCustom = true,
                     StoreCustom = true,
-                    PublicationUnlimited = true,
                     ViewStatics = true,
-                    CSVImport = true
+                    CSVImport = true,
+                    Priority = true
                 }
 
             );
@@ -112,6 +119,14 @@ namespace oMeli_Back.Context
                 entity.Property(s => s.DateCreation).IsRequired();
                 entity.Property(s => s.State).IsRequired();
                 entity.Property(s => s.Renovation).IsRequired();
+
+                entity.HasOne(s => s.Plan)
+                .WithMany(p => p.Subscriptions)
+                .HasForeignKey(s => s.PlanId);
+
+                entity.HasOne(s => s.User)
+                .WithOne(u => u.Subscription)
+                .HasForeignKey<Subscription>(s => s.UserId);
             });
         }
     }
