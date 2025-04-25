@@ -7,8 +7,8 @@ namespace oMeli_Back.Validators.Auth
     {
         public LogInValidator()
         {
-            RuleFor(user => user.Email).NotNull().EmailAddress().WithMessage("Email is required and must be a valid email address.");
-            RuleFor(user => user.Password).NotNull().MinimumLength(8).WithMessage("Password is required and must be lowly 8 characters.");
+            RuleFor(user => user.Email).NotNull().WithMessage("Email is required and must be a valid email address.");
+            RuleFor(user => user.Password).NotNull().WithMessage("Password is required and must be lowly 8 characters.");
         }
     }
 }

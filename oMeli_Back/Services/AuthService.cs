@@ -31,7 +31,6 @@ namespace oMeli_Back.Services
                 Email = signUpDto.Email,
                 Password = hashedPassword
             };
-            //search buyer role
             var buyerRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Buyer");
             if (buyerRole == null) throw new Exception("Buyer Role not found");
 
@@ -54,8 +53,8 @@ namespace oMeli_Back.Services
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(u => u.Email == logInDto.Email);
-            var userRoles = userExists.UserRoles.Select(ur => ur.Role.Name).ToList();
             if (userExists == null) throw new Exception("User not found");
+            var userRoles = userExists.UserRoles.Select(ur => ur.Role.Name).ToList();
 
             bool verifyPassword = _util.VerifyHashText(logInDto.Password, userExists.Password);
             if (!verifyPassword) throw new Exception("Invalid password");

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using oMeli_Back.Services;
-using oMeli_Back.Validators;
+using oMeli_Back.Validators.Auth;
 using FluentValidation;
 using FluentValidation.Results;
 using oMeli_Back.DTOs.Auth;
@@ -33,6 +33,7 @@ namespace oMeli_Back.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult> LogIn([FromBody]LogInDto logInDto)
