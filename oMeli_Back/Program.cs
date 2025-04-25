@@ -9,6 +9,7 @@ var connectionString = builder.Configuration.GetConnectionString("Connection");
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddSingleton<Util>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<SubscriptionService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

@@ -117,8 +117,8 @@ namespace oMeli_Back.Context
                 entity.Property(s => s.DateStart);
                 entity.Property(s => s.DateEnd);
                 entity.Property(s => s.DateCreation).IsRequired();
-                entity.Property(s => s.State).IsRequired();
-                entity.Property(s => s.Renovation).IsRequired();
+                entity.Property(s => s.State).IsRequired().HasMaxLength(20);
+                entity.Property(s => s.Renovation);
 
                 entity.HasOne(s => s.Plan)
                 .WithMany(p => p.Subscriptions)

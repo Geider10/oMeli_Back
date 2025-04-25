@@ -4,6 +4,7 @@ using oMeli_Back.Services;
 using oMeli_Back.DTOs.Subscription;
 using oMeli_Back.Validators.Subscription;
 using FluentValidation.Results;
+using FluentValidation;
 
 namespace oMeli_Back.Controllers
 {

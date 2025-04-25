@@ -10,7 +10,6 @@ namespace oMeli_Back.Validators.Subscription
             RuleFor(subs => subs.SubscriptionId).NotEmpty().WithMessage("SubscriptionId is required");
             RuleFor(subs => subs.PlanId).NotEmpty().WithMessage("PlanId is required");
             RuleFor(subs => subs.State).NotEmpty().Must(x => x == "active" || x == "inactive").WithMessage("State must be 'active' or 'inactive'");
-            RuleFor(subs => subs.Renovation).NotEmpty().WithMessage("Renovation is required");
         }
     }
 }
