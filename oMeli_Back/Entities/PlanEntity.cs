@@ -12,6 +12,6 @@
         public bool CSVImport { get; set; }
         public bool Priority { get; set; }
 
-        public ICollection<Subscription> Subscriptions { get; set; } 
+        public ICollection<SubscriptionEntity> Subscriptions { get; set; } 
     }
 }

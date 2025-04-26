@@ -1,6 +1,6 @@
 ﻿namespace oMeli_Back.Entities
 {
-    public class Subscription
+    public class SubscriptionEntity
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
@@ -13,7 +13,7 @@
         public string State { get; set; } // activa, inactiva, pausada
         public bool Renovation { get; set; }
 
-        public Subscription()
+        public SubscriptionEntity()
         {
             Id = Guid.NewGuid();
             DateCreation = DateTime.Now;

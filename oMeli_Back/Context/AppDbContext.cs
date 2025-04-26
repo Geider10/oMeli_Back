@@ -9,7 +9,7 @@ namespace oMeli_Back.Context
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<UserRoleEntity> UserRoles { get; set; }
         public DbSet<PlanEntity> Plans { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<SubscriptionEntity> Subscriptions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserEntity>(entity => {
@@ -108,7 +108,7 @@ namespace oMeli_Back.Context
 
             );
 
-            modelBuilder.Entity<Subscription>(entity => {
+            modelBuilder.Entity<SubscriptionEntity>(entity => {
                 entity.ToTable("Subscription");
                 entity.HasKey(s => s.Id);
                 entity.Property(s => s.Id).ValueGeneratedOnAdd();
@@ -126,7 +126,7 @@ namespace oMeli_Back.Context
 
                 entity.HasOne(s => s.User)
                 .WithOne(u => u.Subscription)
-                .HasForeignKey<Subscription>(s => s.UserId);
+                .HasForeignKey<SubscriptionEntity>(s => s.UserId);
             });
         }
     }

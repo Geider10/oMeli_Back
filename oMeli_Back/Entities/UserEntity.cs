@@ -11,7 +11,7 @@
         public DateTime Date_Creation { get; set; }
         //representa relacion y permite navegar entre las tablas
         public ICollection<UserRoleEntity> UserRoles { get; set; }
-        public Subscription Subscription { get; set; }
+        public SubscriptionEntity Subscription { get; set; }
 
         public UserEntity()
         {

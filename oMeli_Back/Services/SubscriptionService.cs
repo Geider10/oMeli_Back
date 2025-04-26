@@ -14,7 +14,7 @@ namespace oMeli_Back.Services
 
         public async Task<String> Create(CreateDto createDto)
         {
-            Subscription subscription = new Subscription
+            SubscriptionEntity subscription = new SubscriptionEntity
             {
                 UserId = Guid.Parse(createDto.UserId),
                 PlanId = Guid.Parse(createDto.PlanId),
