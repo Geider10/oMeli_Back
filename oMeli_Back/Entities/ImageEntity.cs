@@ -10,7 +10,6 @@
         public DateTime DateCreation { get; set; }
 
         public StoreEntity Store { get; set; }
-
         public ImageEntity()
         {
             Id = Guid.NewGuid();

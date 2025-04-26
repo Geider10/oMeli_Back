@@ -21,6 +21,8 @@
         public SubscriptionEntity Subscription { get; set; }
         public ICollection<ScheduleEntity> Schedules { get; set; }
         public ICollection<PaymentMethodEntity> PaymentMethods { get; set; }
+        public ICollection<FollowerEntity> Followers { get; set; }
+        public ICollection<ImageEntity> Images { get; set; }
         public StoreEntity()
         {
             Id = Guid.NewGuid();

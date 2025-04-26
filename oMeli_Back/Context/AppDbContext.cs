@@ -1,5 +1,6 @@
 ﻿using oMeli_Back.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 namespace oMeli_Back.Context
 {
     public class AppDBContext : DbContext
@@ -10,8 +11,14 @@ namespace oMeli_Back.Context
         public DbSet<UserRoleEntity> UserRoles { get; set; }
         public DbSet<PlanEntity> Plans { get; set; }
         public DbSet<SubscriptionEntity> Subscriptions { get; set; }
+        public DbSet<StoreEntity> Stores { get; set; }
+        public DbSet<ScheduleEntity> Schedules { get; set; }
+        public DbSet<PaymentMethodEntity> PaymentMethods { get; set; }
+        public DbSet<FollowerEntity> Followers { get; set; }
+        public DbSet<ImageEntity> Images { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //auth
             modelBuilder.Entity<UserEntity>(entity => {
                 entity.ToTable("User");
                 entity.HasKey(u => u.Id);
@@ -51,9 +58,7 @@ namespace oMeli_Back.Context
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
             });
-
-          
-            
+            //subscription
             modelBuilder.Entity<PlanEntity>(entity =>
             {
                 entity.ToTable("Plan");
@@ -127,6 +132,93 @@ namespace oMeli_Back.Context
                 entity.HasOne(s => s.User)
                 .WithOne(u => u.Subscription)
                 .HasForeignKey<SubscriptionEntity>(s => s.UserId);
+            });
+            //store
+            modelBuilder.Entity<StoreEntity>(entity => {
+                entity.ToTable("Store");
+                entity.HasKey(s => s.Id);
+                entity.Property(s => s.Id).ValueGeneratedOnAdd();
+                entity.Property(s => s.UserId).IsRequired();
+                entity.Property(s => s.SubscriptionId).IsRequired();
+                entity.Property(s => s.Name).IsRequired().HasMaxLength(50);
+                entity.Property(s => s.Wassap).IsRequired().HasMaxLength(20);
+                entity.Property(s => s.Mail).IsRequired().HasMaxLength(100);
+                entity.Property(s => s.Local);
+                entity.Property(s => s.Address).HasMaxLength(100);
+                entity.Property(s => s.AddressDescription).HasMaxLength(200);
+                entity.Property(s => s.LocalNumber).HasMaxLength(20);
+                entity.Property(s => s.Shipping);
+                entity.Property(s => s.Meeting);
+                entity.Property(s => s.CurrentProducts).IsRequired();
+                entity.Property(s => s.DateCreation).IsRequired();
+
+                entity.HasOne(s => s.User)
+                .WithOne(u => u.Store)
+                .HasForeignKey<StoreEntity>(s => s.UserId);
+
+                entity.HasOne(s => s.Subscription)
+                .WithOne(subs => subs.Store)
+                .HasForeignKey<StoreEntity>(s => s.SubscriptionId);
+            });
+
+            modelBuilder.Entity<ScheduleEntity>(entity =>
+            {
+                entity.ToTable("Schedule");
+                entity.HasKey(s => s.Id);
+                entity.Property(s => s.Id).ValueGeneratedOnAdd();
+                entity.Property(s => s.StoreId).IsRequired();
+                entity.Property(s => s.Day).IsRequired().HasMaxLength(20);
+                entity.Property(s => s.HourStart).IsRequired().HasMaxLength(20);
+                entity.Property(s => s.HourEnd).IsRequired().HasMaxLength(20);
+                entity.Property(s => s.DateCreation).IsRequired();
+
+                entity.HasOne(s => s.Store)
+                .WithMany(str => str.Schedules)
+                .HasForeignKey(s => s.StoreId);
+            });
+            modelBuilder.Entity<PaymentMethodEntity>(entity => {
+                entity.ToTable("PaymentMethod");
+                entity.HasKey(pm => pm.Id);
+                entity.Property(pm => pm.Id).ValueGeneratedOnAdd();
+                entity.Property(pm => pm.StoreId).IsRequired();
+                entity.Property(pm => pm.Name).IsRequired().HasMaxLength(50);
+                entity.Property(pm => pm.Type).IsRequired().HasMaxLength(50);
+                entity.Property(pm => pm.DateCreation).IsRequired();
+
+                entity.HasOne(pm => pm.Store)
+                .WithMany(s => s.PaymentMethods)
+                .HasForeignKey(pm => pm.StoreId);
+            });
+            modelBuilder.Entity<FollowerEntity>(entity =>
+            {
+                entity.ToTable("Follower");
+                entity.HasKey(f => f.Id);
+                entity.Property(f => f.Id).ValueGeneratedOnAdd();
+                entity.Property(f => f.StoreId).IsRequired();
+                entity.Property(f => f.UserId).IsRequired();
+                entity.Property(f => f.DateCreation).IsRequired();
+
+                entity.HasOne(f => f.Store)
+                .WithMany(s => s.Followers)
+                .HasForeignKey(f => f.StoreId);
+
+                entity.HasOne(f => f.User)
+                .WithMany(u => u.Followers)
+                .HasForeignKey(f => f.UserId);
+            });
+            modelBuilder.Entity<ImageEntity>(entity => {
+                entity.ToTable("Image");
+                entity.HasKey(i => i.Id);
+                entity.Property(i => i.Id).ValueGeneratedOnAdd();
+                entity.Property(i => i.EntityId).IsRequired();
+                entity.Property(i => i.NameEntity).IsRequired().HasMaxLength(50);
+                entity.Property(i => i.DetailImg).IsRequired().HasMaxLength(50);
+                entity.Property(i => i.UrlImg).IsRequired();
+                entity.Property(i => i.DateCreation).IsRequired();
+
+                entity.HasOne(i => i.Store)
+                .WithMany(s => s.Images)
+                .HasForeignKey(i => i.EntityId);
             });
         }
     }

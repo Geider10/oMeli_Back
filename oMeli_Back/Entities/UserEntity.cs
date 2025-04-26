@@ -12,7 +12,8 @@
         //representa relacion y permite navegar entre las tablas
         public ICollection<UserRoleEntity> UserRoles { get; set; }
         public SubscriptionEntity Subscription { get; set; }
-
+        public StoreEntity Store { get; set; }
+        public ICollection<FollowerEntity> Followers { get; set; }
         public UserEntity()
         {
             Id = Guid.NewGuid();
