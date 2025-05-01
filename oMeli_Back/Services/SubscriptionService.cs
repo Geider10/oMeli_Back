@@ -1,25 +1,46 @@
 ﻿using oMeli_Back.Entities;
 using oMeli_Back.Context;
 using oMeli_Back.DTOs.Subscription;
-
+using Microsoft.EntityFrameworkCore;
+using oMeli_Back.DTOs;
+using oMeli_Back.Utils;
 namespace oMeli_Back.Services
 {
     public class SubscriptionService
     {
         private AppDBContext _context;
-        public SubscriptionService(AppDBContext context)
+        private Util _util;
+        public SubscriptionService(AppDBContext context, Util util)
         {
             _context = context;
+            _util = util;
         }
+        public async Task<GetByUserRes> GetByUser (string userId)
+        {
+            var subscription = await _context.Subscriptions
+                .Include(s => s.Plan)
+                .FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
+            if (subscription == null) throw new Exception("Subscription not found");
 
-        public async Task<String> Create(CreateDto createDto)
+            var userSubscription = new GetByUserRes
+            {
+                NamePlan = subscription.Plan.Name,
+                State = subscription.State,
+                Renovation = subscription.Renovation,
+                DateStart = subscription.DateStart,
+                DateEnd = subscription.DateEnd
+            };
+
+            return userSubscription;
+        }
+        public async Task<GeneralRes> Create(CreateDto createDto)
         {
             SubscriptionEntity subscription = new SubscriptionEntity
             {
                 UserId = Guid.Parse(createDto.UserId),
                 PlanId = Guid.Parse(createDto.PlanId),
-                DateStart = createDto.DateStart,
-                DateEnd = createDto.DateEnd,
+                DateStart = _util.ConvertDate(createDto.DateStart),
+                DateEnd = _util.ConvertDate(createDto.DateEnd),
                 State = createDto.State,
                 Renovation = createDto.Renovation,
             };
@@ -27,24 +48,24 @@ namespace oMeli_Back.Services
             await _context.Subscriptions.AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            return "Subscription created";
+            return new GeneralRes { Ok = true, Message = "Subscription created" };
         }
         //actualizar() => cambiar el plan, renovar el plan, desactivar susbcription
-        public async Task<string> Update(UpdateDto updateDto)
+        public async Task<GeneralRes> Update(UpdateDto updateDto)
         {
             var subscription = await _context.Subscriptions.FindAsync(Guid.Parse(updateDto.SubscriptionId));
             if (subscription == null) throw new Exception("Subscription not found");
 
             subscription.PlanId = Guid.Parse(updateDto.PlanId);
-            subscription.DateStart = updateDto.DataStart;
-            subscription.DateEnd = updateDto.DateEnd;
+            subscription.DateStart = _util.ConvertDate(updateDto.DataStart);
+            subscription.DateEnd = _util.ConvertDate(updateDto.DateEnd);
             subscription.State = updateDto.State;
             subscription.Renovation = updateDto.Renovation;
 
             _context.Update(subscription);
             await _context.SaveChangesAsync();
 
-            return "Subscription updated";
+            return new GeneralRes { Ok = true, Message = "Subscription updated" };
         }
             
     }

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
 namespace oMeli_Back.Utils
 {
     public class Util
@@ -41,6 +42,12 @@ namespace oMeli_Back.Utils
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public DateTime ConvertDate(string date)
+        {
+            var newDate = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            return newDate;
         }
     }
 

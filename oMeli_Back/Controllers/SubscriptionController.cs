@@ -17,9 +17,22 @@ namespace oMeli_Back.Controllers
         {
             _subscriptionService = subscriptionService;
         }
-
+        [HttpGet]
+        [Route("{userId}")]
+        public async Task<ActionResult> GetByUser([FromRoute] string userId)
+        {
+            try
+            {
+                var subscription = await _subscriptionService.GetByUser(userId);
+                return Ok(subscription);
+            }
+            catch (Exception ex)
+            { 
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost]
-        [Route("create")]
+        [Route("")]
         public async Task<ActionResult> Create([FromBody] CreateDto createDto)
         {
             try
@@ -37,7 +50,7 @@ namespace oMeli_Back.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
+        [Route("")]
         public async Task<ActionResult> Update([FromBody] UpdateDto updateDto)
         {
             try
