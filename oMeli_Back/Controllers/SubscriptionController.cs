@@ -5,11 +5,13 @@ using oMeli_Back.DTOs.Subscription;
 using oMeli_Back.Validators.Subscription;
 using FluentValidation.Results;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 
 namespace oMeli_Back.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SubscriptionController : ControllerBase
     {
         private SubscriptionService _subscriptionService;

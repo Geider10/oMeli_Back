@@ -24,6 +24,7 @@ namespace oMeli_Back.Services
 
             var userSubscription = new GetByUserDto
             {
+                SubscriptionId = subscription.Id,
                 NamePlan = subscription.Plan.Name,
                 State = subscription.State,
                 Renovation = subscription.Renovation,
