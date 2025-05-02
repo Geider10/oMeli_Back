@@ -2,8 +2,8 @@
 using oMeli_Back.Utils;
 using Microsoft.EntityFrameworkCore;
 using oMeli_Back.Entities;
-using System.Reflection.Metadata.Ecma335;
 using oMeli_Back.DTOs.Auth;
+using oMeli_Back.DTOs;
 
 namespace oMeli_Back.Services
 {
@@ -17,7 +17,7 @@ namespace oMeli_Back.Services
             _util = util;
         }
 
-        public async Task<String> SignUp(SignUpDto signUpDto)
+        public async Task<GeneralRes> SignUp(SignUpDto signUpDto)
         {
             var userExist = await _context.Users.FirstOrDefaultAsync(u => u.Email == signUpDto.Email);
             if (userExist != null) throw new Exception("User already exists");
@@ -44,7 +44,7 @@ namespace oMeli_Back.Services
             await _context.UserRoles.AddAsync(userRole);
             await _context.SaveChangesAsync();
 
-            return "User created";
+            return new GeneralRes { Ok = true, Message = "User created" };
         }
 
         public async Task<String> LogIn(LogInDto logInDto)

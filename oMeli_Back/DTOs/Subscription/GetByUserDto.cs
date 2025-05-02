@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace oMeli_Back.DTOs.Subscription
 {
-    public class GetByUserRes
+    public class GetByUserDto
     {
         public string NamePlan { get; set; }
         public string State { get; set; }

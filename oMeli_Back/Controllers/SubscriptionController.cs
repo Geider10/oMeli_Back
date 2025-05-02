@@ -18,7 +18,7 @@ namespace oMeli_Back.Controllers
             _subscriptionService = subscriptionService;
         }
         [HttpGet]
-        [Route("{userId}")]
+        [Route("user/{userId}")]
         public async Task<ActionResult> GetByUser([FromRoute] string userId)
         {
             try
@@ -50,14 +50,14 @@ namespace oMeli_Back.Controllers
         }
 
         [HttpPut]
-        [Route("")]
-        public async Task<ActionResult> Update([FromBody] UpdateDto updateDto)
+        [Route("{subscriptionId}")]
+        public async Task<ActionResult> Update([FromRoute] string subscriptionId,[FromBody] UpdateDto updateDto)
         {
             try
             {
                 ValidationResult validation = new UpdateValidator().Validate(updateDto);
                 if (!validation.IsValid) return BadRequest(validation.Errors);
-                var response = await _subscriptionService.Update(updateDto);
+                var response = await _subscriptionService.Update(updateDto, subscriptionId);
 
                 return Ok(response);
             }

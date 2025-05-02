@@ -15,14 +15,14 @@ namespace oMeli_Back.Services
             _context = context;
             _util = util;
         }
-        public async Task<GetByUserRes> GetByUser (string userId)
+        public async Task<GetByUserDto> GetByUser (string userId)
         {
             var subscription = await _context.Subscriptions
                 .Include(s => s.Plan)
                 .FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
             if (subscription == null) throw new Exception("Subscription not found");
 
-            var userSubscription = new GetByUserRes
+            var userSubscription = new GetByUserDto
             {
                 NamePlan = subscription.Plan.Name,
                 State = subscription.State,
@@ -50,10 +50,10 @@ namespace oMeli_Back.Services
 
             return new GeneralRes { Ok = true, Message = "Subscription created" };
         }
-        //actualizar() => cambiar el plan, renovar el plan, desactivar susbcription
-        public async Task<GeneralRes> Update(UpdateDto updateDto)
+        //actualizar() => cambiar a otro plan, renovar el plan, desactivar susbcription
+        public async Task<GeneralRes> Update(UpdateDto updateDto, string subscriptionId)
         {
-            var subscription = await _context.Subscriptions.FindAsync(Guid.Parse(updateDto.SubscriptionId));
+            var subscription = await _context.Subscriptions.FindAsync(Guid.Parse(subscriptionId));
             if (subscription == null) throw new Exception("Subscription not found");
 
             subscription.PlanId = Guid.Parse(updateDto.PlanId);

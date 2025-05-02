@@ -2,7 +2,6 @@
 {
     public class UpdateDto
     {
-        public string SubscriptionId { get; set; }
         public string PlanId { get; set; }
         public string DataStart { get; set; }
         public string DateEnd { get; set; }
