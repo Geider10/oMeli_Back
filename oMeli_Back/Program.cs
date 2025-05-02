@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(conn
 builder.Services.AddSingleton<Util>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<PlanService>();
 
 builder.Services.AddAuthentication(config =>
 {
