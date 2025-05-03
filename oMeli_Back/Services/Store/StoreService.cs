@@ -1,4 +1,5 @@
-﻿using oMeli_Back.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using oMeli_Back.Context;
 using oMeli_Back.DTOs;
 using oMeli_Back.DTOs.Store;
 using oMeli_Back.Entities;
@@ -33,6 +34,24 @@ namespace oMeli_Back.Services.Store
 
             return new GeneralRes { Ok = true, Message = "Store created" };
         }
+        
+        public async Task<GeneralRes> UpdateStore (UpdateStoreDto storeDto, string storeId)
+        {
+            var storeExists = await _context.Stores.FirstOrDefaultAsync(s => s.Id == Guid.Parse(storeId));
+            if (storeExists == null) throw new Exception("store not found");
 
+            storeExists.Name = storeDto.Name;
+            storeExists.Wassap = storeDto.Wassap;
+            storeExists.Mail = storeDto.Mail;
+            storeExists.HasLocal = storeDto.HasLocal;
+            storeExists.Address = storeDto.Address;
+            storeExists.AddressDescription = storeDto.AddressDescription;
+            storeExists.LocalNumber = storeDto.LocalNumber;
+
+            _context.Stores.Update(storeExists);
+            await _context.SaveChangesAsync();
+
+            return new GeneralRes { Ok = true, Message = "Store updated" };
+        }
     }
 }

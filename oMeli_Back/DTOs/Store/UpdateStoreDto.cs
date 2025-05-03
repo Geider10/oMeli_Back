@@ -1,0 +1,13 @@
+﻿namespace oMeli_Back.DTOs.Store
+{
+    public class UpdateStoreDto
+    {
+        public string Name { get; set; }
+        public string Wassap { get; set; }
+        public string Mail { get; set; }
+        public bool HasLocal { get; set; }
+        public string Address { get; set; }
+        public string AddressDescription { get; set; }
+        public string LocalNumber { get; set; }
+    }
+}

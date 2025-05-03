@@ -33,5 +33,22 @@ namespace oMeli_Back.Controllers.Store
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPut][Route("{storeId}")]
+        public async Task<ActionResult> UpdateStore([FromBody] UpdateStoreDto storeDto, [FromRoute] string storeId)
+        {
+            try
+            {
+                ValidationResult validateUpdateStore = new UpdateStoreValidator().Validate(storeDto);
+                if (!validateUpdateStore.IsValid) return BadRequest(validateUpdateStore.Errors);
+
+                var res = await _storeService.UpdateStore(storeDto, storeId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
     }
 }
