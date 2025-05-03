@@ -143,18 +143,17 @@ namespace oMeli_Back.Context
                 entity.Property(s => s.Name).IsRequired().HasMaxLength(50);
                 entity.Property(s => s.Wassap).IsRequired().HasMaxLength(20);
                 entity.Property(s => s.Mail).IsRequired().HasMaxLength(100);
-                entity.Property(s => s.Local);
-                entity.Property(s => s.Address).HasMaxLength(100);
+                entity.Property(s => s.HasLocal);
+                entity.Property(s => s.Address).HasMaxLength(200);
                 entity.Property(s => s.AddressDescription).HasMaxLength(200);
                 entity.Property(s => s.LocalNumber).HasMaxLength(20);
-                entity.Property(s => s.Shipping);
-                entity.Property(s => s.Meeting);
                 entity.Property(s => s.CurrentProducts).IsRequired();
                 entity.Property(s => s.DateCreation).IsRequired();
 
                 entity.HasOne(s => s.User)
                 .WithOne(u => u.Store)
-                .HasForeignKey<StoreEntity>(s => s.UserId);
+                .HasForeignKey<StoreEntity>(s => s.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(s => s.Subscription)
                 .WithOne(subs => subs.Store)
@@ -204,7 +203,8 @@ namespace oMeli_Back.Context
 
                 entity.HasOne(f => f.User)
                 .WithMany(u => u.Followers)
-                .HasForeignKey(f => f.UserId);
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
             });
             modelBuilder.Entity<ImageEntity>(entity => {
                 entity.ToTable("Image");
