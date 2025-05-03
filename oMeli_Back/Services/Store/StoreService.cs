@@ -53,5 +53,25 @@ namespace oMeli_Back.Services.Store
 
             return new GeneralRes { Ok = true, Message = "Store updated" };
         }
+
+        public async Task<GetStoreByUserIdDto> GetStoreByUserIdDto( string userId)
+        {
+            var storeExists = await _context.Stores.FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
+            if (storeExists == null) throw new Exception("store not found");
+
+            var store = new GetStoreByUserIdDto
+            {
+                StoreId = storeExists.Id.ToString(),
+                Name = storeExists.Name,
+                Wassap = storeExists.Wassap,
+                Mail = storeExists.Mail,
+                HasLocal = storeExists.HasLocal,
+                Address = storeExists.Address,
+                AddressDescription = storeExists.AddressDescription,
+                LocalNumber = storeExists.LocalNumber
+            };
+
+            return store;
+        }
     }
 }

@@ -4,11 +4,13 @@ using oMeli_Back.Services.Store;
 using oMeli_Back.DTOs.Store;
 using oMeli_Back.Validators.Store;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 
 namespace oMeli_Back.Controllers.Store
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StoreController : ControllerBase
     {
         private StoreService _storeService;
@@ -33,6 +35,7 @@ namespace oMeli_Back.Controllers.Store
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPut][Route("{storeId}")]
         public async Task<ActionResult> UpdateStore([FromBody] UpdateStoreDto storeDto, [FromRoute] string storeId)
         {
@@ -47,7 +50,20 @@ namespace oMeli_Back.Controllers.Store
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
 
+        [HttpGet][Route("user/{userId}")]
+        public async Task<ActionResult> GetStoreByUserId([FromRoute] string userId)
+        {
+            try
+            {
+                var res = await _storeService.GetStoreByUserIdDto(userId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
