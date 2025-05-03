@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using oMeli_Back.Context;
 using oMeli_Back.Services;
+using oMeli_Back.Services.Store;
 using oMeli_Back.Utils;
 using System.Text;
 
@@ -15,6 +16,7 @@ builder.Services.AddSingleton<Util>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<PlanService>();
+builder.Services.AddScoped<StoreService>();
 
 builder.Services.AddAuthentication(config =>
 {
