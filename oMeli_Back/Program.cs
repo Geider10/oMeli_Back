@@ -17,6 +17,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<PlanService>();
 builder.Services.AddScoped<StoreService>();
+builder.Services.AddScoped<ScheduleService>();
 
 builder.Services.AddAuthentication(config =>
 {
