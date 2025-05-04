@@ -50,5 +50,32 @@ namespace oMeli_Back.Controllers.Store
 
             }
         }
+        [HttpDelete][Route("{scheduleId}")]
+        public async Task<ActionResult> DeleteSchedule([FromRoute] string scheduleId)
+        {
+            try
+            {
+                var res = await _scheduleService.DeleteSchedule(scheduleId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        [HttpGet][Route("{storeId}")]
+        public async Task<ActionResult> GetSchedules([FromRoute]string storeId)
+        {
+            try
+            {
+                var res = await _scheduleService.GetSchedules(storeId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
