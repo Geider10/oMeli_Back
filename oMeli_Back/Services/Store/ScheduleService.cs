@@ -15,6 +15,10 @@ namespace oMeli_Back.Services.Store
 
         public async Task<GeneralRes> CreateSchedule(CreateScheduleDto scheduleDto)
         {
+            var storeSchedules = _context.Schedules.Where(s => s.StoreId == Guid.Parse(scheduleDto.StoreId)).ToList();
+            var repiteDat = storeSchedules.Find(s => s.Day == scheduleDto.Day);
+            if (repiteDat != null) throw new Exception("Schedule already exists for this day");
+
             var schedule = new ScheduleEntity
             {
                 StoreId = Guid.Parse(scheduleDto.StoreId),
