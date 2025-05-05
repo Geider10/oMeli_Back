@@ -16,7 +16,6 @@ namespace oMeli_Back.Services.Store
         public async Task<GeneralRes> CreatePaymentMethod(CreatePaymentMethodDto paymentMethodDto)
         {
             var storeTypePMs = await _context.PaymentMethods.Where(pm => pm.StoreId == Guid.Parse(paymentMethodDto.StoreId) && pm.Type == paymentMethodDto.Type).ToListAsync();
-            Console.WriteLine("lista de py de la tienda por tipos" + storeTypePMs);
             var repiteName = storeTypePMs.Find(pm => pm.Name == paymentMethodDto.Name);
             if (repiteName != null) throw new Exception("PM already exists with this name");
 
@@ -31,6 +30,22 @@ namespace oMeli_Back.Services.Store
             await _context.SaveChangesAsync();
 
             return new GeneralRes { Ok = true, Message = "Payment method created" };
+        }
+        public async Task<GeneralRes> UpdatePaymentMethod(string pmId, UpdatePaymentMethodDto paymentMethodDto)
+        {
+            var pmExists = await _context.PaymentMethods.FirstOrDefaultAsync(pm => pm.Id == Guid.Parse(pmId));
+            if(pmExists == null) throw new Exception("Payment method not found");
+            var storeTypePMs = await _context.PaymentMethods.Where(pm=> pm.StoreId == pmExists.StoreId && pm.Type == paymentMethodDto.Type).ToListAsync();
+            var repiteName = storeTypePMs.Find(pm => pm.Name == paymentMethodDto.Name);
+            if(repiteName != null) throw new Exception("PM already exists with this name");
+
+            pmExists.Name = paymentMethodDto.Name;
+            pmExists.Type = paymentMethodDto.Type;
+
+            _context.PaymentMethods.Update(pmExists);
+            await _context.SaveChangesAsync();
+
+            return new GeneralRes { Ok = true, Message = "Payment method updated" };
         }
     }
 }

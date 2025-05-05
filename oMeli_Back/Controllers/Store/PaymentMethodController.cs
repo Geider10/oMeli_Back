@@ -32,5 +32,24 @@ namespace oMeli_Back.Controllers.Store
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut]
+        [Route("{pmId}")]
+        public async Task<ActionResult> UpdatePaymentMethod([FromRoute]string pmId, [FromBody]UpdatePaymentMethodDto paymentMethodDto)
+        {
+            try
+            {
+                ValidationResult validateUpdatePM = new UpdatePaymentMethodValidator().Validate(paymentMethodDto);
+                if(!validateUpdatePM.IsValid) return BadRequest(validateUpdatePM.Errors);
+
+                var res = await _pmService.UpdatePaymentMethod(pmId, paymentMethodDto);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
     }
 }
