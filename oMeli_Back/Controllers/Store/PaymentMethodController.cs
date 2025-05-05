@@ -50,6 +50,7 @@ namespace oMeli_Back.Controllers.Store
 
             }
         }
+
         [HttpDelete][Route("{pmId}")]
         public async Task<ActionResult> DeletePaymentMethod([FromRoute]string pmId)
         {
@@ -63,5 +64,20 @@ namespace oMeli_Back.Controllers.Store
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet][Route("{storeId}")]
+        public async Task<ActionResult> GetPaymentMethods([FromRoute] string storeId)
+        {
+            try
+            {
+                var res = await _pmService.GetPaymentMethods(storeId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

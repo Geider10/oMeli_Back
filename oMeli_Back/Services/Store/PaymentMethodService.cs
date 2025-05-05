@@ -57,5 +57,19 @@ namespace oMeli_Back.Services.Store
 
             return new GeneralRes { Ok = true, Message = "Payment method deleted" };
         }
+        public async Task<List<GetPMByStoreIdDto>> GetPaymentMethods(string storeId)
+        {
+            var paymentMethods = await _context.PaymentMethods
+                .Where(pm => pm.StoreId == Guid.Parse(storeId))
+                .Select(pm => new GetPMByStoreIdDto
+                {
+                    PaymentMethodId = pm.Id.ToString(),
+                    Name = pm.Name,
+                    Type = pm.Type
+                }).ToListAsync();
+            if (paymentMethods.Count == 0) throw new Exception("No payment methods found");
+
+            return paymentMethods;
+        }
     }
 }
