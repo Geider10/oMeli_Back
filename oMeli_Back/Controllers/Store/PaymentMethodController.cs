@@ -1,0 +1,36 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using oMeli_Back.Services.Store;
+using oMeli_Back.DTOs.Store;
+using oMeli_Back.Validators.Store;
+using FluentValidation.Results;
+
+namespace oMeli_Back.Controllers.Store
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PaymentMethodController : ControllerBase
+    {
+        private PaymentMethodService _pmService;
+        public PaymentMethodController(PaymentMethodService pmService)
+        {
+            _pmService = pmService;
+        }
+        [HttpPost][Route("")]
+        public async Task<ActionResult> CreatePaymentMethod([FromBody] CreatePaymentMethodDto paymentMethodDto)
+        {
+            try
+            {
+                ValidationResult validateCreatePM = new CreatePaymentMethodValidator().Validate(paymentMethodDto);
+                if(!validateCreatePM.IsValid) return BadRequest(validateCreatePM.Errors);
+
+                var res = await _pmService.CreatePaymentMethod(paymentMethodDto);
+                return CreatedAtAction(nameof(CreatePaymentMethod),res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    }
+}
