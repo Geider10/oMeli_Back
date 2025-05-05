@@ -47,5 +47,15 @@ namespace oMeli_Back.Services.Store
 
             return new GeneralRes { Ok = true, Message = "Payment method updated" };
         }
+        public async Task<GeneralRes> DeletePaymentMethod(string pmId)
+        {
+            var pmExist = await _context.PaymentMethods.FirstOrDefaultAsync(pm => pm.Id == Guid.Parse(pmId));
+            if(pmExist == null) throw new Exception("Payment method not found");
+
+            _context.PaymentMethods.Remove(pmExist);
+            await _context.SaveChangesAsync();
+
+            return new GeneralRes { Ok = true, Message = "Payment method deleted" };
+        }
     }
 }
