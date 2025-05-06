@@ -33,5 +33,47 @@ namespace oMeli_Back.Controllers.Store
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete][Route("store/{storeId}/user/{userId}")]
+        public async Task<ActionResult> DeleteFollower([FromRoute] string storeId, [FromRoute] string userId)
+        {
+            try
+            {
+                var res = await _followerService.DeleteFollower(storeId, userId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet][Route("store/{storeId}")]
+        public async Task<ActionResult> GetFollowersByStore([FromRoute] string storeId)
+        {
+            try
+            {
+                var res = await _followerService.GetFollowersByStore(storeId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet][Route("user/{userId}")]
+        public async Task<ActionResult> GetStoresFollwedByUser([FromRoute] string userId)
+        {
+            try
+            {
+                var res = await _followerService.GetStoresFollowedByUser(userId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
