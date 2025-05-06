@@ -19,6 +19,7 @@ builder.Services.AddScoped<PlanService>();
 builder.Services.AddScoped<StoreService>();
 builder.Services.AddScoped<ScheduleService>();
 builder.Services.AddScoped<PaymentMethodService>();
+builder.Services.AddScoped<FollowerService>();
 
 builder.Services.AddAuthentication(config =>
 {
