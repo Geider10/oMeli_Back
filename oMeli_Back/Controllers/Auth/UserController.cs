@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using oMeli_Back.Services.Auth;
 using oMeli_Back.DTOs.Auth;
+using oMeli_Back.Validators.Auth;
+using FluentValidation.Results;
+
 namespace oMeli_Back.Controllers.Auth
 {
     [Route("api/[controller]")]
@@ -20,6 +23,23 @@ namespace oMeli_Back.Controllers.Auth
             try
             {
                 var res = await _userService.GetUserById(userId);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut][Route("{userId}")]
+        public async Task<ActionResult> UpdateUser([FromRoute]string userId, [FromBody]UpdateUserDto userDto)
+        {
+            try
+            {
+                ValidationResult validateUserDto = new UpdateUserValidator().Validate(userDto);
+                if (!validateUserDto.IsValid) return BadRequest(validateUserDto.Errors);
+
+                var res = await _userService.UpdateUser(userId, userDto);
                 return Ok(res);
             }
             catch (Exception ex)

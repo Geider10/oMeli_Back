@@ -28,5 +28,20 @@ namespace oMeli_Back.Services.Auth
 
             return userDto;
         }
+        public async Task<GeneralRes> UpdateUser(string userId, UpdateUserDto userDto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+            if (user == null) throw new Exception("User not found");
+
+            user.Name = userDto.Name;
+            user.LastName = userDto.LastName;
+            user.Phone = userDto.Phone;
+            user.Email = userDto.Email;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return new GeneralRes { Ok = true, Message = "User updated" };
+        }
     }
 }
