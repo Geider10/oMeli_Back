@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using oMeli_Back.Context;
 using oMeli_Back.Services;
 using oMeli_Back.Services.Store;
+using oMeli_Back.Services.Auth;
 using oMeli_Back.Utils;
 using System.Text;
 
@@ -14,6 +15,7 @@ var secretKey = builder.Configuration.GetRequiredSection("SECRET_KEY").Value;
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddSingleton<Util>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<PlanService>();
 builder.Services.AddScoped<StoreService>();
