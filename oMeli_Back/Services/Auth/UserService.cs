@@ -18,8 +18,11 @@ namespace oMeli_Back.Services.Auth
 
         public async Task<GetUserDto> GetUserById(string userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+            var user = await _context.Users
+                .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+                .FirstOrDefaultAsync(u => u.Id == Guid.Parse(userId));
             if (user == null) throw new Exception("User not found");
+            var userRols = user.UserRoles.Select(u => u.Role.Name).ToList();
 
             var userDto = new GetUserDto
             {
@@ -27,6 +30,7 @@ namespace oMeli_Back.Services.Auth
                 LastName = user.LastName,
                 Phone = user.Phone,
                 Email = user.Email,
+                Rols = userRols
             };
 
             return userDto;
