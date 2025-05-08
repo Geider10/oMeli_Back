@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using oMeli_Back.Services;
 using oMeli_Back.DTOs.Subscription;
 using oMeli_Back.Validators.Subscription;
 using FluentValidation.Results;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using oMeli_Back.Services.Subscription;
 
-namespace oMeli_Back.Controllers
+namespace oMeli_Back.Controllers.Subscription
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -39,8 +39,8 @@ namespace oMeli_Back.Controllers
         {
             try
             {
-                ValidationResult validation = new CreateSubscriptionValidator().Validate(createDto);
-                if (!validation.IsValid) return BadRequest(validation.Errors);
+                ValidationResult validateCreateSubscription = new CreateSubscriptionValidator().Validate(createDto);
+                if (!validateCreateSubscription.IsValid) return BadRequest(validateCreateSubscription.Errors);
 
                 var res = await _subscriptionService.CreateSubscription(createDto);
                 return CreatedAtAction(nameof(CreateSubscription), res);
@@ -51,17 +51,16 @@ namespace oMeli_Back.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("{subscriptionId}")]
-        public async Task<ActionResult> Update([FromRoute] string subscriptionId,[FromBody] UpdateDto updateDto)
+        [HttpPut][Route("{subscriptionId}")]
+        public async Task<ActionResult> UpdateSubscription([FromRoute] string subscriptionId,[FromBody] UpdateSubscriptionDto updateDto)
         {
             try
             {
-                ValidationResult validation = new UpdateValidator().Validate(updateDto);
-                if (!validation.IsValid) return BadRequest(validation.Errors);
-                var response = await _subscriptionService.Update(updateDto, subscriptionId);
-
-                return Ok(response);
+                ValidationResult validateUpdateSubscription = new UpdateSubscriptionValidator().Validate(updateDto);
+                if (!validateUpdateSubscription.IsValid) return BadRequest(validateUpdateSubscription.Errors);
+                
+                var res = await _subscriptionService.UpdateSubscription(updateDto, subscriptionId);
+                return Ok(res);
             }
             catch (Exception ex)
             {

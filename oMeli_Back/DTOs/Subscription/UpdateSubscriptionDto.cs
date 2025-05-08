@@ -1,6 +1,6 @@
 ﻿namespace oMeli_Back.DTOs.Subscription
 {
-    public class UpdateDto
+    public class UpdateSubscriptionDto
     {
         public string PlanId { get; set; }
         public string DataStart { get; set; }

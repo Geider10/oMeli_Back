@@ -7,6 +7,7 @@ using oMeli_Back.Services.Store;
 using oMeli_Back.Services.Auth;
 using oMeli_Back.Utils;
 using System.Text;
+using oMeli_Back.Services.Subscription;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Connection");

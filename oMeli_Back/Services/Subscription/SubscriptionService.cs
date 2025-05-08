@@ -4,7 +4,7 @@ using oMeli_Back.DTOs.Subscription;
 using Microsoft.EntityFrameworkCore;
 using oMeli_Back.DTOs;
 using oMeli_Back.Utils;
-namespace oMeli_Back.Services
+namespace oMeli_Back.Services.Subscription
 {
     public class SubscriptionService
     {
@@ -15,6 +15,7 @@ namespace oMeli_Back.Services
             _context = context;
             _util = util;
         }
+
         public async Task<GetByUserDto> GetByUser (string userId)
         {
             var subscription = await _context.Subscriptions
@@ -56,7 +57,7 @@ namespace oMeli_Back.Services
             return new GeneralRes { Ok = true, Message = "Subscription created" };
         }
         //actualizar() => cambiar a otro plan, renovar el plan, desactivar susbcription
-        public async Task<GeneralRes> Update(UpdateDto updateDto, string subscriptionId)
+        public async Task<GeneralRes> UpdateSubscription(UpdateSubscriptionDto updateDto, string subscriptionId)
         {
             var subscription = await _context.Subscriptions.FindAsync(Guid.Parse(subscriptionId));
             if (subscription == null) throw new Exception("Subscription not found");
