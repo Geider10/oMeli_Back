@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using oMeli_Back.Services;
+using oMeli_Back.Services.Subscription;
 
-namespace oMeli_Back.Controllers
+namespace oMeli_Back.Controllers.Subscription
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,8 +14,7 @@ namespace oMeli_Back.Controllers
             _planService = planService;
         }
 
-        [HttpGet]
-        [Route("")]
+        [HttpGet][Route("")]
         public async Task<ActionResult> GetPlans()
         {
             try
@@ -29,8 +28,7 @@ namespace oMeli_Back.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("{planId}")]
+        [HttpGet][Route("{planId}")]
         public async Task<ActionResult> GetPlanById([FromRoute] string planId)
         {
             try

@@ -2,7 +2,7 @@
 {
     public class GetPlanDto
     {
-        public Guid Id { get; set; }
+        public string PlanId { get; set; }
         public string Name { get; set; }
     }
 }

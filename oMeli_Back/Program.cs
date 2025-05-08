@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using oMeli_Back.Context;
-using oMeli_Back.Services;
 using oMeli_Back.Services.Store;
 using oMeli_Back.Services.Auth;
 using oMeli_Back.Utils;
