@@ -3,9 +3,9 @@ using oMeli_Back.DTOs.Subscription;
 
 namespace oMeli_Back.Validators.Subscription
 {
-    public class CreateValidator: AbstractValidator<CreateDto>
+    public class CreateSubscriptionValidator: AbstractValidator<CreateSubscriptionDto>
     {
-        public CreateValidator()
+        public CreateSubscriptionValidator()
         {
             RuleFor(subs => subs.UserId).NotEmpty().WithMessage("UserId is required");
             RuleFor(subs => subs.PlanId).NotEmpty().WithMessage("PlanId is required");

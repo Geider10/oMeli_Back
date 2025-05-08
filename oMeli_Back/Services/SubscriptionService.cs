@@ -34,8 +34,12 @@ namespace oMeli_Back.Services
 
             return userSubscription;
         }
-        public async Task<GeneralRes> Create(CreateDto createDto)
+        public async Task<GeneralRes> CreateSubscription(CreateSubscriptionDto createDto)
         {
+            var repiteSubs = await _context
+                .Subscriptions.FirstOrDefaultAsync( s => s.UserId == Guid.Parse(createDto.UserId) && s.PlanId == Guid.Parse(createDto.PlanId));
+            if (repiteSubs != null) throw new Exception("Susbcription already exists");
+
             SubscriptionEntity subscription = new SubscriptionEntity
             {
                 UserId = Guid.Parse(createDto.UserId),

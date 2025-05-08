@@ -19,8 +19,8 @@ namespace oMeli_Back.Controllers
         {
             _subscriptionService = subscriptionService;
         }
-        [HttpGet]
-        [Route("user/{userId}")]
+
+        [HttpGet][Route("user/{userId}")]
         public async Task<ActionResult> GetByUser([FromRoute] string userId)
         {
             try
@@ -33,17 +33,17 @@ namespace oMeli_Back.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        [Route("")]
-        public async Task<ActionResult> Create([FromBody] CreateDto createDto)
+
+        [HttpPost][Route("")]
+        public async Task<ActionResult> CreateSubscription ([FromBody] CreateSubscriptionDto createDto)
         {
             try
             {
-                ValidationResult validation = new CreateValidator().Validate(createDto);
+                ValidationResult validation = new CreateSubscriptionValidator().Validate(createDto);
                 if (!validation.IsValid) return BadRequest(validation.Errors);
-                var response = await _subscriptionService.Create(createDto);
 
-                return CreatedAtAction(nameof(Create), response);
+                var res = await _subscriptionService.CreateSubscription(createDto);
+                return CreatedAtAction(nameof(CreateSubscription), res);
             }
             catch (Exception ex)
             {
