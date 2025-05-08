@@ -16,16 +16,16 @@ namespace oMeli_Back.Services.Subscription
             _util = util;
         }
 
-        public async Task<GetByUserDto> GetByUser (string userId)
+        public async Task<GetStoreByUserDto> GetStoreByUser (string userId)
         {
             var subscription = await _context.Subscriptions
                 .Include(s => s.Plan)
                 .FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
             if (subscription == null) throw new Exception("Subscription not found");
 
-            var userSubscription = new GetByUserDto
+            var userSubscription = new GetStoreByUserDto
             {
-                SubscriptionId = subscription.Id,
+                SubscriptionId = subscription.Id.ToString(),
                 NamePlan = subscription.Plan.Name,
                 State = subscription.State,
                 Renovation = subscription.Renovation,
