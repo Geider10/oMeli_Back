@@ -5,12 +5,12 @@ using oMeli_Back.Entities;
 using oMeli_Back.DTOs.Auth;
 using oMeli_Back.DTOs;
 
-namespace oMeli_Back.Services
+namespace oMeli_Back.Services.Auth
 {
     public class AuthService
     {
-        private readonly AppDBContext _context;
-        private readonly Util _util;
+        private AppDBContext _context;
+        private Util _util;
         public AuthService(AppDBContext context, Util util)
         {
             _context = context;
@@ -32,14 +32,12 @@ namespace oMeli_Back.Services
                 Password = hashedPassword
             };
             var buyerRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Buyer");
-            if (buyerRole == null) throw new Exception("Buyer Role not found");
-
             UserRoleEntity userRole = new UserRoleEntity
             {
                 UserId = user.Id,
                 RoleId = buyerRole.Id
             };
-            //save all
+
             await _context.Users.AddAsync(user);
             await _context.UserRoles.AddAsync(userRole);
             await _context.SaveChangesAsync();
@@ -47,7 +45,7 @@ namespace oMeli_Back.Services
             return new GeneralRes { Ok = true, Message = "User created" };
         }
 
-        public async Task<String> LogIn(LogInDto logInDto)
+        public async Task<string> LogIn(LogInDto logInDto)
         {
             var userExists = await _context.Users
                 .Include(u => u.UserRoles)
