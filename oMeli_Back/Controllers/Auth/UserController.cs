@@ -47,5 +47,22 @@ namespace oMeli_Back.Controllers.Auth
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut][Route("{userId}/password")]
+        public async Task<ActionResult> UpdatePassword([FromRoute]string userId, [FromBody]UpdatePasswordDto passwordDto)
+        {
+            try
+            {
+                ValidationResult validatePasswordDto = new UpdatePasswordValidator().Validate(passwordDto);
+                if (!validatePasswordDto.IsValid) return BadRequest(validatePasswordDto.Errors);
+
+                var res = await _userService.UpdatePassword(userId, passwordDto);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
