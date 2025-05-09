@@ -5,11 +5,13 @@ using oMeli_Back.DTOs.Store;
 using oMeli_Back.Validators.Store;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 
 namespace oMeli_Back.Controllers.Store
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ScheduleController : ControllerBase
     {
         private ScheduleService _scheduleService;
@@ -34,6 +36,7 @@ namespace oMeli_Back.Controllers.Store
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPut][Route("{scheduleId}")]
         public async Task<ActionResult> UpdateSchedule([FromRoute]string scheduleId, [FromBody] UpdateScheduleDto scheduleDto)
         {
