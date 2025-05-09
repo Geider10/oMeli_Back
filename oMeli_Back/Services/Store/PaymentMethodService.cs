@@ -13,11 +13,11 @@ namespace oMeli_Back.Services.Store
         {
             _context = context;
         }
+
         public async Task<GeneralRes> CreatePaymentMethod(CreatePaymentMethodDto paymentMethodDto)
         {
-            var storeTypePMs = await _context.PaymentMethods.Where(pm => pm.StoreId == Guid.Parse(paymentMethodDto.StoreId) && pm.Type == paymentMethodDto.Type).ToListAsync();
-            var repiteName = storeTypePMs.Find(pm => pm.Name == paymentMethodDto.Name);
-            if (repiteName != null) throw new Exception("PM already exists with this name");
+            var nameExists = await _context.PaymentMethods.AnyAsync(pm => pm.StoreId == Guid.Parse(paymentMethodDto.StoreId) && pm.Name == paymentMethodDto.Name);
+            if (nameExists) throw new Exception("Payment method already exists with this name");
 
             var paymentMethod = new PaymentMethodEntity
             {
@@ -31,6 +31,7 @@ namespace oMeli_Back.Services.Store
 
             return new GeneralRes { Ok = true, Message = "Payment method created" };
         }
+
         public async Task<GeneralRes> UpdatePaymentMethod(string pmId, UpdatePaymentMethodDto paymentMethodDto)
         {
             var pmExists = await _context.PaymentMethods.FirstOrDefaultAsync(pm => pm.Id == Guid.Parse(pmId));

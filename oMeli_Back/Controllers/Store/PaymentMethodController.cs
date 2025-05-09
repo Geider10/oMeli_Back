@@ -4,11 +4,13 @@ using oMeli_Back.Services.Store;
 using oMeli_Back.DTOs.Store;
 using oMeli_Back.Validators.Store;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 
 namespace oMeli_Back.Controllers.Store
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PaymentMethodController : ControllerBase
     {
         private PaymentMethodService _pmService;
@@ -16,6 +18,7 @@ namespace oMeli_Back.Controllers.Store
         {
             _pmService = pmService;
         }
+
         [HttpPost][Route("")]
         public async Task<ActionResult> CreatePaymentMethod([FromBody] CreatePaymentMethodDto paymentMethodDto)
         {
