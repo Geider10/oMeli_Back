@@ -1,6 +1,6 @@
 ﻿namespace oMeli_Back.DTOs.Store
 {
-    public class GetPMByStoreIdDto
+    public class GetPMByStoreDto
     {
         public string PaymentMethodId { get; set; }
         public string Name { get; set; }

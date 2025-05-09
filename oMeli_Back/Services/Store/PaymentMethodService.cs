@@ -16,8 +16,8 @@ namespace oMeli_Back.Services.Store
 
         public async Task<GeneralRes> CreatePaymentMethod(CreatePaymentMethodDto paymentMethodDto)
         {
-            var nameExists = await _context.PaymentMethods.AnyAsync(pm => pm.StoreId == Guid.Parse(paymentMethodDto.StoreId) && pm.Name == paymentMethodDto.Name);
-            if (nameExists) throw new Exception("Payment method already exists with this name");
+            var pmName = await _context.PaymentMethods.AnyAsync(pm => pm.StoreId == Guid.Parse(paymentMethodDto.StoreId) && pm.Name == paymentMethodDto.Name);
+            if (pmName) throw new Exception("Payment method already exists with this name");
 
             var paymentMethod = new PaymentMethodEntity
             {
@@ -36,9 +36,9 @@ namespace oMeli_Back.Services.Store
         {
             var pmExists = await _context.PaymentMethods.FirstOrDefaultAsync(pm => pm.Id == Guid.Parse(pmId));
             if(pmExists == null) throw new Exception("Payment method not found");
-            var storeTypePMs = await _context.PaymentMethods.Where(pm=> pm.StoreId == pmExists.StoreId && pm.Type == paymentMethodDto.Type).ToListAsync();
-            var repiteName = storeTypePMs.Find(pm => pm.Name == paymentMethodDto.Name);
-            if(repiteName != null) throw new Exception("PM already exists with this name");
+
+            bool pmName = await _context.PaymentMethods.AnyAsync(pm => pm.StoreId == pmExists.StoreId && pm.Name == paymentMethodDto.Name);
+            if(pmName) throw new Exception("PM already exists with this name");
 
             pmExists.Name = paymentMethodDto.Name;
             pmExists.Type = paymentMethodDto.Type;
@@ -48,6 +48,7 @@ namespace oMeli_Back.Services.Store
 
             return new GeneralRes { Ok = true, Message = "Payment method updated" };
         }
+
         public async Task<GeneralRes> DeletePaymentMethod(string pmId)
         {
             var pmExist = await _context.PaymentMethods.FirstOrDefaultAsync(pm => pm.Id == Guid.Parse(pmId));
@@ -58,17 +59,18 @@ namespace oMeli_Back.Services.Store
 
             return new GeneralRes { Ok = true, Message = "Payment method deleted" };
         }
-        public async Task<List<GetPMByStoreIdDto>> GetPaymentMethods(string storeId)
+
+        public async Task<List<GetPMByStoreDto>> GetPaymentMethodsByStore(string storeId)
         {
             var paymentMethods = await _context.PaymentMethods
                 .Where(pm => pm.StoreId == Guid.Parse(storeId))
-                .Select(pm => new GetPMByStoreIdDto
+                .Select(pm => new GetPMByStoreDto
                 {
                     PaymentMethodId = pm.Id.ToString(),
                     Name = pm.Name,
                     Type = pm.Type
                 }).ToListAsync();
-            if (paymentMethods.Count == 0) throw new Exception("No payment methods found");
+            if (paymentMethods == null || paymentMethods.Count == 0) throw new Exception("No payment methods found");
 
             return paymentMethods;
         }

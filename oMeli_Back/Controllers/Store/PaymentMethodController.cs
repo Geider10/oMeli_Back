@@ -68,12 +68,12 @@ namespace oMeli_Back.Controllers.Store
             }
         }
 
-        [HttpGet][Route("{storeId}")]
-        public async Task<ActionResult> GetPaymentMethods([FromRoute] string storeId)
+        [HttpGet][Route("store/{storeId}")]
+        public async Task<ActionResult> GetPaymentMethodsByStore([FromRoute] string storeId)
         {
             try
             {
-                var res = await _pmService.GetPaymentMethods(storeId);
+                var res = await _pmService.GetPaymentMethodsByStore(storeId);
                 return Ok(res);
             }
             catch (Exception ex)
