@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using oMeli_Back.Context;
 using oMeli_Back.Services;
 using oMeli_Back.Utils;
@@ -15,6 +16,7 @@ builder.Services.AddSingleton<Util>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<PlanService>();
+builder.Services.AddScoped<ProductCategoryService>();
 
 builder.Services.AddAuthentication(config =>
 {
@@ -37,7 +39,22 @@ builder.Services.AddAuthentication(config =>
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Ingrese el token JWT en el formato: Bearer {token}",
+        }
+    );
+    c.OperationFilter<AuthorizeCheckOperationFilter>();
+});
 
 var app = builder.Build();
 
