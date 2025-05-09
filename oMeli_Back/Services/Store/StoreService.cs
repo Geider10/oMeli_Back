@@ -16,6 +16,10 @@ namespace oMeli_Back.Services.Store
 
         public async Task<GeneralRes> CreateStore(CreateStoreDto storeDto)
         {
+            var repiteStore = await _context.Stores
+                .FirstOrDefaultAsync(s => s.UserId == Guid.Parse(storeDto.UserId) && s.SubscriptionId == Guid.Parse(storeDto.SubscriptionId));
+            if (repiteStore != null) throw new Exception("store already exists to this user");
+
             var store = new StoreEntity
             {
                 UserId = Guid.Parse(storeDto.UserId),
@@ -27,9 +31,17 @@ namespace oMeli_Back.Services.Store
                 Address = storeDto.Address,
                 AddressDescription = storeDto.AddressDescription,
                 LocalNumber = storeDto.LocalNumber,
-                CurrentProducts = storeDto.CurrentProducts
+                CurrentProducts = 0
             };
+            var sellerRol = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Seller");
+            var userRole = new UserRoleEntity
+            {
+                UserId = Guid.Parse(storeDto.UserId),
+                RoleId = sellerRol.Id
+            };
+
             await _context.Stores.AddAsync(store);
+            await _context.UserRoles.AddAsync(userRole);
             await _context.SaveChangesAsync();
 
             return new GeneralRes { Ok = true, Message = "Store created" };

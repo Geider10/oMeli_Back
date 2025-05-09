@@ -16,8 +16,6 @@ namespace oMeli_Back.Validators.Store
             RuleFor(s => s.Address).Length(0,200).WithMessage("Address must be between 0 and 200 characters");
             RuleFor(s => s.AddressDescription).Length(0, 200).WithMessage("AddressDescription must be between 0 and 200 characters");
             RuleFor(s => s.LocalNumber).Length(0, 20).WithMessage("LocalNumber must be between 0 and 20 characters");
-            RuleFor(s => s.CurrentProducts).Must(x => x >= 0).WithMessage("CurrentProducts must be greater than or equal to 0");
-
         }
     }
 }

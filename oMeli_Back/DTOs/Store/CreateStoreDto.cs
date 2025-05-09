@@ -11,6 +11,5 @@
         public string Address { get; set; }
         public string AddressDescription { get; set; }
         public string LocalNumber { get; set; }
-        public int CurrentProducts { get; set; }
     }
 }
