@@ -1,6 +1,6 @@
 ﻿namespace oMeli_Back.DTOs.Store
 {
-    public class GetStoreByUserIdDto
+    public class GetStoreByUserDto
     {
         public string StoreId { get; set; }
         public string Name { get; set; }

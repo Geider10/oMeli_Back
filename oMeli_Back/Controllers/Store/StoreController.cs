@@ -54,11 +54,11 @@ namespace oMeli_Back.Controllers.Store
         }
 
         [HttpGet][Route("user/{userId}")]
-        public async Task<ActionResult> GetStoreByUserId([FromRoute] string userId)
+        public async Task<ActionResult> GetStoreByUser([FromRoute] string userId)
         {
             try
             {
-                var res = await _storeService.GetStoreByUserIdDto(userId);
+                var res = await _storeService.GetStoreByUser(userId);
                 return Ok(res);
             }
             catch (Exception ex)

@@ -66,12 +66,12 @@ namespace oMeli_Back.Services.Store
             return new GeneralRes { Ok = true, Message = "Store updated" };
         }
 
-        public async Task<GetStoreByUserIdDto> GetStoreByUserIdDto( string userId)
+        public async Task<GetStoreByUserDto> GetStoreByUser( string userId)
         {
             var storeExists = await _context.Stores.FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
             if (storeExists == null) throw new Exception("store not found");
 
-            var store = new GetStoreByUserIdDto
+            var store = new GetStoreByUserDto
             {
                 StoreId = storeExists.Id.ToString(),
                 Name = storeExists.Name,
