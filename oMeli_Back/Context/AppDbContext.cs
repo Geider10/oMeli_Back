@@ -16,6 +16,7 @@ namespace oMeli_Back.Context
         public DbSet<PaymentMethodEntity> PaymentMethods { get; set; }
         public DbSet<FollowerEntity> Followers { get; set; }
         public DbSet<ImageEntity> Images { get; set; }
+        public DbSet<ProductCategoryEntity> ProductCategories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //auth
@@ -219,6 +220,22 @@ namespace oMeli_Back.Context
                 entity.HasOne(i => i.Store)
                 .WithMany(s => s.Images)
                 .HasForeignKey(i => i.EntityId);
+            });
+
+            modelBuilder.Entity<ProductCategoryEntity>(entity =>
+            {
+                entity.ToTable("ProductCategories");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Description).IsRequired().HasMaxLength(256);
+                entity.Property(e => e.CreatedBy).IsRequired();
+                entity.Property(e => e.UpdatedBy);
+                entity.Property(e => e.IsActive).HasDefaultValue(true);
+                entity
+                    .Property(e => e.CreationDate)
+                    .HasDefaultValueSql("GETUTCDATE()")
+                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.UpdatedDate);
             });
         }
     }
