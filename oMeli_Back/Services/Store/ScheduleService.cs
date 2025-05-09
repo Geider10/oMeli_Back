@@ -15,8 +15,8 @@ namespace oMeli_Back.Services.Store
 
         public async Task<GeneralRes> CreateSchedule(CreateScheduleDto scheduleDto)
         {
-            var existsDay = await _context.Schedules.AnyAsync(s => s.StoreId == Guid.Parse(scheduleDto.StoreId) && s.Day == scheduleDto.Day);
-            if (existsDay) throw new Exception("Schedule already exists for this day");
+            var dayExists = await _context.Schedules.AnyAsync(s => s.StoreId == Guid.Parse(scheduleDto.StoreId) && s.Day == scheduleDto.Day);
+            if (dayExists) throw new Exception("Schedule already exists for this day");
 
             var schedule = new ScheduleEntity
             {
@@ -36,12 +36,12 @@ namespace oMeli_Back.Services.Store
         {
             var scheduleExists = await _context.Schedules.FirstOrDefaultAsync(s => s.Id == Guid.Parse(scheduleId));
             if (scheduleExists == null) throw new Exception("Schedule not found");
-            var storeSchedules = _context.Schedules.Where(s => s.StoreId == scheduleExists.StoreId).ToList();
 
-            var repiteDay = storeSchedules.Find(s => s.Day == scheduleDto.Day && s.Id != scheduleExists.Id);
-            if (repiteDay != null) throw new Exception("Schedule already exists for this day");
-            var repriteHours = scheduleExists.HourStart == scheduleDto.HourStart && scheduleExists.HourEnd == scheduleDto.HourEnd && scheduleExists.Day == scheduleDto.Day;
-            if (repriteHours) throw new Exception("Schedule already exists for this hours");
+            bool dayExists = await _context.Schedules.AnyAsync(s => s.StoreId == scheduleExists.StoreId && s.Day == scheduleDto.Day && s.Id != scheduleExists.Id);
+            if (dayExists) throw new Exception("Schedule already exists for this day");
+
+            bool noChanges = scheduleExists.HourStart == scheduleDto.HourStart && scheduleExists.HourEnd == scheduleDto.HourEnd && scheduleExists.Day == scheduleDto.Day;
+            if (noChanges) throw new Exception("Schedule already exists for this hours");
 
             scheduleExists.Day = scheduleDto.Day;
             scheduleExists.HourStart = scheduleDto.HourStart;

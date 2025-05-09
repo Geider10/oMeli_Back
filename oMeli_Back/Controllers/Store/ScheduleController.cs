@@ -44,6 +44,7 @@ namespace oMeli_Back.Controllers.Store
             {
                 ValidationResult validateUpdateScheduleDto = new UpdateScheduleValidator().Validate(scheduleDto);
                 if (!validateUpdateScheduleDto.IsValid) return BadRequest(validateUpdateScheduleDto.Errors);
+
                 var res = await _scheduleService.UpdateSchedule(scheduleId, scheduleDto);
                 return Ok(res);
             }
@@ -53,6 +54,7 @@ namespace oMeli_Back.Controllers.Store
 
             }
         }
+
         [HttpDelete][Route("{scheduleId}")]
         public async Task<ActionResult> DeleteSchedule([FromRoute] string scheduleId)
         {
