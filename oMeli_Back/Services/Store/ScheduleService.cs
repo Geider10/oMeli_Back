@@ -51,7 +51,6 @@ namespace oMeli_Back.Services.Store
             await _context.SaveChangesAsync();
 
             return new GeneralRes { Ok = true, Message = "Schedule updated" };
-
         }
         
         public async Task<GeneralRes> DeleteSchedule(string scheduleId)
@@ -65,18 +64,18 @@ namespace oMeli_Back.Services.Store
             return new GeneralRes { Ok = true, Message = "Schedule deleted" };
         }
 
-        public async Task<List<GetSchedulesByStoreIdDto>> GetSchedules (string storeId)
+        public async Task<List<GetSchedulesByStoreDto>> GetSchedulesByStore (string storeId)
         {
             var schedules = await _context.Schedules
                 .Where(s => s.StoreId == Guid.Parse(storeId))
-                .Select(s => new GetSchedulesByStoreIdDto
+                .Select(s => new GetSchedulesByStoreDto
                 {
                     ScheduleId = s.Id.ToString(),
                     Day = s.Day,
                     HourStart = s.HourStart,
                     HourEnd = s.HourEnd
                 }).ToListAsync();
-            if (schedules == null) throw new Exception("Schedules not found");
+            if (schedules == null || schedules.Count == 0) throw new Exception("Schedules not found");
 
             return schedules;
         }

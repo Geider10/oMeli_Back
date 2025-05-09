@@ -69,12 +69,13 @@ namespace oMeli_Back.Controllers.Store
 
             }
         }
-        [HttpGet][Route("{storeId}")]
-        public async Task<ActionResult> GetSchedules([FromRoute]string storeId)
+
+        [HttpGet][Route("store/{storeId}")]
+        public async Task<ActionResult> GetSchedulesByStore ([FromRoute]string storeId)
         {
             try
             {
-                var res = await _scheduleService.GetSchedules(storeId);
+                var res = await _scheduleService.GetSchedulesByStore(storeId);
                 return Ok(res);
             }
             catch (Exception ex)

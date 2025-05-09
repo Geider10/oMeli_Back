@@ -1,6 +1,6 @@
 ﻿namespace oMeli_Back.DTOs.Store
 {
-    public class GetSchedulesByStoreIdDto
+    public class GetSchedulesByStoreDto
     {
         public string ScheduleId { get; set; }
         public string Day { get; set; }
