@@ -4,11 +4,13 @@ using oMeli_Back.Services.Auth;
 using oMeli_Back.DTOs.Auth;
 using oMeli_Back.Validators.Auth;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 
 namespace oMeli_Back.Controllers.Auth
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private UserService _userService;

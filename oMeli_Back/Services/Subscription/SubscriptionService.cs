@@ -16,14 +16,14 @@ namespace oMeli_Back.Services.Subscription
             _util = util;
         }
 
-        public async Task<GetStoreByUserDto> GetStoreByUser (string userId)
+        public async Task<GetSubscriptionByUserDto> GetSubscriptionByUser (string userId)
         {
             var subscription = await _context.Subscriptions
                 .Include(s => s.Plan)
                 .FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
             if (subscription == null) throw new Exception("Subscription not found");
 
-            var userSubscription = new GetStoreByUserDto
+            var userSubscription = new GetSubscriptionByUserDto
             {
                 SubscriptionId = subscription.Id.ToString(),
                 NamePlan = subscription.Plan.Name,
@@ -35,7 +35,7 @@ namespace oMeli_Back.Services.Subscription
 
             return userSubscription;
         }
-        public async Task<GeneralRes> CreateSubscription(CreateSubscriptionDto createDto)
+        public async Task<CreateSubscriptionRes> CreateSubscription(CreateSubscriptionDto createDto)
         {
             var repiteSubs = await _context
                 .Subscriptions.FirstOrDefaultAsync( s => s.UserId == Guid.Parse(createDto.UserId) && s.PlanId == Guid.Parse(createDto.PlanId));
@@ -54,7 +54,13 @@ namespace oMeli_Back.Services.Subscription
             await _context.Subscriptions.AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            return new GeneralRes { Ok = true, Message = "Subscription created" };
+            var resCreateSubscription = new CreateSubscriptionRes
+            {  
+                SubscriptionId = subscription.Id.ToString(),
+                Ok = true,
+                Message = "Subscription created"
+            };
+            return resCreateSubscription;
         }
         //actualizar() => cambiar a otro plan, renovar el plan, desactivar susbcription
         public async Task<GeneralRes> UpdateSubscription(UpdateSubscriptionDto updateDto, string subscriptionId)

@@ -21,11 +21,11 @@ namespace oMeli_Back.Controllers.Subscription
         }
 
         [HttpGet][Route("user/{userId}")]
-        public async Task<ActionResult> GetStoreByUser([FromRoute] string userId)
+        public async Task<ActionResult> GetSubscriptionByUser([FromRoute] string userId)
         {
             try
             {
-                var subscription = await _subscriptionService.GetStoreByUser(userId);
+                var subscription = await _subscriptionService.GetSubscriptionByUser(userId);
                 return Ok(subscription);
             }
             catch (Exception ex)
