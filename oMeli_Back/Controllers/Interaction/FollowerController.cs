@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using oMeli_Back.Services.Store;
-using oMeli_Back.DTOs.Store;
 using oMeli_Back.Validators.Store;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
+using oMeli_Back.DTOs.Interaction;
+using oMeli_Back.Services.Interaction;
+using oMeli_Back.Validators.Interaction;
 
-namespace oMeli_Back.Controllers.Store
+namespace oMeli_Back.Controllers.Interaction
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FollowerController : ControllerBase
     {
         private FollowerService _followerService;

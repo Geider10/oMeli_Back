@@ -1,4 +1,4 @@
-﻿namespace oMeli_Back.DTOs.Store
+﻿namespace oMeli_Back.DTOs.Interaction
 {
     public class GetFollowersByStoreDto
     {

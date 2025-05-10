@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using oMeli_Back.Context;
 using oMeli_Back.DTOs;
-using oMeli_Back.DTOs.Store;
+using oMeli_Back.DTOs.Interaction;
 using oMeli_Back.Entities;
-namespace oMeli_Back.Services.Store
+namespace oMeli_Back.Services.Interaction
 {
     public class FollowerService
     {
@@ -45,9 +45,10 @@ namespace oMeli_Back.Services.Store
 
         public async Task<GetFollowersByStoreDto> GetFollowersByStore(string storeId)
         {
-            var countFollowers =  _context.Followers.Where(f => f.StoreId == Guid.Parse(storeId)).Count();
-            if (countFollowers == 0) throw new Exception("No followers for this store");
+            var storeExists = await _context.Stores.FirstOrDefaultAsync(s => s.Id == Guid.Parse(storeId));
+            if(storeExists == null) throw new Exception("Store not found");
 
+            var countFollowers =  _context.Followers.Where(f => f.StoreId == Guid.Parse(storeId)).Count();
             return new GetFollowersByStoreDto
             {
                 Ok = true,
@@ -56,16 +57,21 @@ namespace oMeli_Back.Services.Store
             };
         }
 
-        public async Task<List<GetStoreFollowByUserDto>> GetStoresFollowedByUser(string userId)
+        public async Task<List<GetStoresFollowedByUserDto>> GetStoresFollowedByUser(string userId)
         {
-            var storesFollowed = await _context.Followers.Where(f => f.UserId == Guid.Parse(userId)).ToListAsync();
-            if (storesFollowed == null || storesFollowed.Count == 0) throw new Exception("No stores followed by this user");
-            var storesMap = storesFollowed.Select(s => new GetStoreFollowByUserDto
-            {
-                StoreId = s.StoreId.ToString()
-            }).ToList();
+            var userExists = await _context.Users.FirstOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+            if (userExists == null) throw new Exception("User not found");
 
-            return storesMap;
+            var storesFollowed = await _context.Followers
+                .Where(f => f.UserId == Guid.Parse(userId))
+                .Select(f => new GetStoresFollowedByUserDto
+                {
+                    StoreId = f.StoreId.ToString()
+                })
+                .ToListAsync();
+            
+
+            return storesFollowed;
         }   
     }
 }

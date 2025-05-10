@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using oMeli_Back.DTOs.Store;
+using oMeli_Back.DTOs.Interaction;
 
-namespace oMeli_Back.Validators.Store
+namespace oMeli_Back.Validators.Interaction
 {
     public class CreateFollowerValidator : AbstractValidator<CreateFollowerDto>
     {
