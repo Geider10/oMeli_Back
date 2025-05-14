@@ -4,7 +4,7 @@ using oMeli_Back.DTOs.Subscription;
 using Microsoft.EntityFrameworkCore;
 using oMeli_Back.DTOs;
 using oMeli_Back.Utils;
-namespace oMeli_Back.Services
+namespace oMeli_Back.Services.Subscription
 {
     public class SubscriptionService
     {
@@ -15,16 +15,17 @@ namespace oMeli_Back.Services
             _context = context;
             _util = util;
         }
-        public async Task<GetByUserDto> GetByUser (string userId)
+
+        public async Task<GetSubscriptionByUserDto> GetSubscriptionByUser (string userId)
         {
             var subscription = await _context.Subscriptions
                 .Include(s => s.Plan)
                 .FirstOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
             if (subscription == null) throw new Exception("Subscription not found");
 
-            var userSubscription = new GetByUserDto
+            var userSubscription = new GetSubscriptionByUserDto
             {
-                SubscriptionId = subscription.Id,
+                SubscriptionId = subscription.Id.ToString(),
                 NamePlan = subscription.Plan.Name,
                 State = subscription.State,
                 Renovation = subscription.Renovation,
@@ -34,8 +35,12 @@ namespace oMeli_Back.Services
 
             return userSubscription;
         }
-        public async Task<GeneralRes> Create(CreateDto createDto)
+        public async Task<CreateSubscriptionRes> CreateSubscription(CreateSubscriptionDto createDto)
         {
+            var repiteSubs = await _context
+                .Subscriptions.FirstOrDefaultAsync( s => s.UserId == Guid.Parse(createDto.UserId) && s.PlanId == Guid.Parse(createDto.PlanId));
+            if (repiteSubs != null) throw new Exception("Susbcription already exists");
+
             SubscriptionEntity subscription = new SubscriptionEntity
             {
                 UserId = Guid.Parse(createDto.UserId),
@@ -49,10 +54,16 @@ namespace oMeli_Back.Services
             await _context.Subscriptions.AddAsync(subscription);
             await _context.SaveChangesAsync();
 
-            return new GeneralRes { Ok = true, Message = "Subscription created" };
+            var resCreateSubscription = new CreateSubscriptionRes
+            {  
+                SubscriptionId = subscription.Id.ToString(),
+                Ok = true,
+                Message = "Subscription created"
+            };
+            return resCreateSubscription;
         }
         //actualizar() => cambiar a otro plan, renovar el plan, desactivar susbcription
-        public async Task<GeneralRes> Update(UpdateDto updateDto, string subscriptionId)
+        public async Task<GeneralRes> UpdateSubscription(UpdateSubscriptionDto updateDto, string subscriptionId)
         {
             var subscription = await _context.Subscriptions.FindAsync(Guid.Parse(subscriptionId));
             if (subscription == null) throw new Exception("Subscription not found");

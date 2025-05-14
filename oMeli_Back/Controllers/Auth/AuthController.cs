@@ -1,32 +1,31 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using oMeli_Back.Services;
 using oMeli_Back.Validators.Auth;
 using FluentValidation;
 using FluentValidation.Results;
 using oMeli_Back.DTOs.Auth;
-namespace oMeli_Back.Controllers
+using oMeli_Back.Services.Auth;
+namespace oMeli_Back.Controllers.Auth
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private AuthService _authService;
         public AuthController(AuthService authService)
         {
             _authService = authService;
         }
-        [HttpPost]
-        [Route("signup")]
+        [HttpPost][Route("signup")]
         public async Task<ActionResult> SignUp([FromBody]SignUpDto signUpDto)
         {
             try
             {
-                ValidationResult validator = new SignUpValidator().Validate(signUpDto);
-                if (!validator.IsValid) return BadRequest(validator.Errors);
-                var response = await _authService.SignUp(signUpDto);
-
-                return CreatedAtAction(nameof(SignUp),response);
+                ValidationResult validateSignUpDto = new SignUpValidator().Validate(signUpDto);
+                if (!validateSignUpDto.IsValid) return BadRequest(validateSignUpDto.Errors);
+                
+                var res = await _authService.SignUp(signUpDto);
+                return CreatedAtAction(nameof(SignUp),res);
             }
             catch (Exception ex)
             {
@@ -34,17 +33,16 @@ namespace oMeli_Back.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost][Route("login")]
         public async Task<ActionResult> LogIn([FromBody]LogInDto logInDto)
         {
             try
             {
-                ValidationResult validator = new LogInValidator().Validate(logInDto);
-                if (!validator.IsValid) return BadRequest(validator.Errors);
-                var response = await _authService.LogIn(logInDto);
-
-                return Ok(response);
+                ValidationResult validateLogInDto = new LogInValidator().Validate(logInDto);
+                if (!validateLogInDto.IsValid) return BadRequest(validateLogInDto.Errors);
+                
+                var res = await _authService.LogIn(logInDto);
+                return Ok(res);
             }
             catch (Exception ex)
             {

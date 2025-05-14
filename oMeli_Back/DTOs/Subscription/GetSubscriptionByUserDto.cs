@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace oMeli_Back.DTOs.Subscription
 {
-    public class GetByUserDto
+    public class GetSubscriptionByUserDto
     {
-        public Guid SubscriptionId { get; set; }
+        public string SubscriptionId { get; set; }
         public string NamePlan { get; set; }
         public string State { get; set; }
         public bool Renovation { get; set; }
