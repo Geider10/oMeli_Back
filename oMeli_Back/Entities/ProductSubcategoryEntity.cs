@@ -1,12 +1,12 @@
 namespace oMeli_Back.Entities;
 
-public class ProductCategoryEntity
+public class ProductSubcategoryEntity
 {
     public Guid Id { get; set; }
-    public String Name { get; set; } = String.Empty;
-    public String Description { get; set; } = String.Empty;
-    public ICollection<ProductSubcategoryEntity> Subcategories { get; set; } =
-        new List<ProductSubcategoryEntity>();
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public Guid ProductCategoryId { get; set; }
+    public ProductCategoryEntity ProductCategory { get; set; } = null!;
     public Guid? CreatedBy { get; set; }
     public Guid? UpdatedBy { get; set; }
     public bool IsActive { get; set; } = true;

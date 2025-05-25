@@ -1,11 +1,14 @@
-﻿using oMeli_Back.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using oMeli_Back.Entities;
+
 namespace oMeli_Back.Context
 {
     public class AppDBContext : DbContext
     {
-        public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) {}
+        public AppDBContext(DbContextOptions<AppDBContext> options)
+            : base(options) { }
+
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<UserRoleEntity> UserRoles { get; set; }
@@ -17,10 +20,13 @@ namespace oMeli_Back.Context
         public DbSet<FollowerEntity> Followers { get; set; }
         public DbSet<ImageEntity> Images { get; set; }
         public DbSet<ProductCategoryEntity> ProductCategories { get; set; }
+        public DbSet<ProductSubcategoryEntity> ProductSubcategories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //auth
-            modelBuilder.Entity<UserEntity>(entity => {
+            modelBuilder.Entity<UserEntity>(entity =>
+            {
                 entity.ToTable("User");
                 entity.HasKey(u => u.Id);
                 entity.Property(u => u.Id).ValueGeneratedOnAdd();
@@ -39,25 +45,42 @@ namespace oMeli_Back.Context
                 entity.Property(r => r.Id).ValueGeneratedOnAdd();
                 entity.Property(r => r.Name).IsRequired().HasMaxLength(50);
             });
-            modelBuilder.Entity<RoleEntity>().HasData(
-                new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "Buyer" },
-                new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "Seller" },
-                new RoleEntity { Id = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "Admin" }
-            );
+            modelBuilder
+                .Entity<RoleEntity>()
+                .HasData(
+                    new RoleEntity
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                        Name = "Buyer",
+                    },
+                    new RoleEntity
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        Name = "Seller",
+                    },
+                    new RoleEntity
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                        Name = "Admin",
+                    }
+                );
 
-            modelBuilder.Entity<UserRoleEntity>(entity => {
+            modelBuilder.Entity<UserRoleEntity>(entity =>
+            {
                 entity.ToTable("UserRole");
                 entity.HasKey(ur => new { ur.UserId, ur.RoleId });
                 entity.Property(ur => ur.UserId).IsRequired();
                 entity.Property(ur => ur.RoleId).IsRequired();
 
-                entity.HasOne(ur => ur.User)
-                .WithMany(u => u.UserRoles)
-                .HasForeignKey(ur => ur.UserId);
-            
-                entity.HasOne(ur => ur.Role)
-                .WithMany(r => r.UserRoles)
-                .HasForeignKey(ur => ur.RoleId);
+                entity
+                    .HasOne(ur => ur.User)
+                    .WithMany(u => u.UserRoles)
+                    .HasForeignKey(ur => ur.UserId);
+
+                entity
+                    .HasOne(ur => ur.Role)
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.RoleId);
             });
             //subscription
             modelBuilder.Entity<PlanEntity>(entity =>
@@ -74,47 +97,49 @@ namespace oMeli_Back.Context
                 entity.Property(p => p.CSVImport).IsRequired();
                 entity.Property(p => p.Priority).IsRequired();
             });
-            modelBuilder.Entity<PlanEntity>().HasData(
-                new PlanEntity
-                {
-                    Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                    Name = "Basic",
-                    StoreCreate = true,
-                    ProductLimited = 5,
-                    PublicationCustom = false,
-                    StoreCustom = false,
-                    ViewStatics = false,
-                    CSVImport = false,
-                    Priority = false
-                },
-                new PlanEntity
-                {
-                    Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
-                    Name = "Pro",
-                    StoreCreate = true,
-                    ProductLimited = 15,
-                    PublicationCustom = true,
-                    StoreCustom = true,
-                    ViewStatics = false,
-                    CSVImport = false,
-                    Priority = false
-                },
-                new PlanEntity
-                {
-                    Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
-                    Name = "Premium",
-                    StoreCreate = true,
-                    ProductLimited = 30,
-                    PublicationCustom = true,
-                    StoreCustom = true,
-                    ViewStatics = true,
-                    CSVImport = true,
-                    Priority = true
-                }
+            modelBuilder
+                .Entity<PlanEntity>()
+                .HasData(
+                    new PlanEntity
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                        Name = "Basic",
+                        StoreCreate = true,
+                        ProductLimited = 5,
+                        PublicationCustom = false,
+                        StoreCustom = false,
+                        ViewStatics = false,
+                        CSVImport = false,
+                        Priority = false,
+                    },
+                    new PlanEntity
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                        Name = "Pro",
+                        StoreCreate = true,
+                        ProductLimited = 15,
+                        PublicationCustom = true,
+                        StoreCustom = true,
+                        ViewStatics = false,
+                        CSVImport = false,
+                        Priority = false,
+                    },
+                    new PlanEntity
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                        Name = "Premium",
+                        StoreCreate = true,
+                        ProductLimited = 30,
+                        PublicationCustom = true,
+                        StoreCustom = true,
+                        ViewStatics = true,
+                        CSVImport = true,
+                        Priority = true,
+                    }
+                );
 
-            );
-
-            modelBuilder.Entity<SubscriptionEntity>(entity => {
+            modelBuilder.Entity<SubscriptionEntity>(entity =>
+            {
                 entity.ToTable("Subscription");
                 entity.HasKey(s => s.Id);
                 entity.Property(s => s.Id).ValueGeneratedOnAdd();
@@ -126,16 +151,19 @@ namespace oMeli_Back.Context
                 entity.Property(s => s.State).IsRequired().HasMaxLength(20);
                 entity.Property(s => s.Renovation);
 
-                entity.HasOne(s => s.Plan)
-                .WithMany(p => p.Subscriptions)
-                .HasForeignKey(s => s.PlanId);
+                entity
+                    .HasOne(s => s.Plan)
+                    .WithMany(p => p.Subscriptions)
+                    .HasForeignKey(s => s.PlanId);
 
-                entity.HasOne(s => s.User)
-                .WithOne(u => u.Subscription)
-                .HasForeignKey<SubscriptionEntity>(s => s.UserId);
+                entity
+                    .HasOne(s => s.User)
+                    .WithOne(u => u.Subscription)
+                    .HasForeignKey<SubscriptionEntity>(s => s.UserId);
             });
             //store
-            modelBuilder.Entity<StoreEntity>(entity => {
+            modelBuilder.Entity<StoreEntity>(entity =>
+            {
                 entity.ToTable("Store");
                 entity.HasKey(s => s.Id);
                 entity.Property(s => s.Id).ValueGeneratedOnAdd();
@@ -151,14 +179,16 @@ namespace oMeli_Back.Context
                 entity.Property(s => s.CurrentProducts).IsRequired();
                 entity.Property(s => s.DateCreation).IsRequired();
 
-                entity.HasOne(s => s.User)
-                .WithOne(u => u.Store)
-                .HasForeignKey<StoreEntity>(s => s.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                entity
+                    .HasOne(s => s.User)
+                    .WithOne(u => u.Store)
+                    .HasForeignKey<StoreEntity>(s => s.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(s => s.Subscription)
-                .WithOne(subs => subs.Store)
-                .HasForeignKey<StoreEntity>(s => s.SubscriptionId);
+                entity
+                    .HasOne(s => s.Subscription)
+                    .WithOne(subs => subs.Store)
+                    .HasForeignKey<StoreEntity>(s => s.SubscriptionId);
             });
 
             modelBuilder.Entity<ScheduleEntity>(entity =>
@@ -172,11 +202,13 @@ namespace oMeli_Back.Context
                 entity.Property(s => s.HourEnd).IsRequired().HasMaxLength(20);
                 entity.Property(s => s.DateCreation).IsRequired();
 
-                entity.HasOne(s => s.Store)
-                .WithMany(str => str.Schedules)
-                .HasForeignKey(s => s.StoreId);
+                entity
+                    .HasOne(s => s.Store)
+                    .WithMany(str => str.Schedules)
+                    .HasForeignKey(s => s.StoreId);
             });
-            modelBuilder.Entity<PaymentMethodEntity>(entity => {
+            modelBuilder.Entity<PaymentMethodEntity>(entity =>
+            {
                 entity.ToTable("PaymentMethod");
                 entity.HasKey(pm => pm.Id);
                 entity.Property(pm => pm.Id).ValueGeneratedOnAdd();
@@ -185,9 +217,10 @@ namespace oMeli_Back.Context
                 entity.Property(pm => pm.Type).IsRequired().HasMaxLength(50);
                 entity.Property(pm => pm.DateCreation).IsRequired();
 
-                entity.HasOne(pm => pm.Store)
-                .WithMany(s => s.PaymentMethods)
-                .HasForeignKey(pm => pm.StoreId);
+                entity
+                    .HasOne(pm => pm.Store)
+                    .WithMany(s => s.PaymentMethods)
+                    .HasForeignKey(pm => pm.StoreId);
             });
             modelBuilder.Entity<FollowerEntity>(entity =>
             {
@@ -198,16 +231,19 @@ namespace oMeli_Back.Context
                 entity.Property(f => f.UserId).IsRequired();
                 entity.Property(f => f.DateCreation).IsRequired();
 
-                entity.HasOne(f => f.Store)
-                .WithMany(s => s.Followers)
-                .HasForeignKey(f => f.StoreId);
+                entity
+                    .HasOne(f => f.Store)
+                    .WithMany(s => s.Followers)
+                    .HasForeignKey(f => f.StoreId);
 
-                entity.HasOne(f => f.User)
-                .WithMany(u => u.Followers)
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                entity
+                    .HasOne(f => f.User)
+                    .WithMany(u => u.Followers)
+                    .HasForeignKey(f => f.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
-            modelBuilder.Entity<ImageEntity>(entity => {
+            modelBuilder.Entity<ImageEntity>(entity =>
+            {
                 entity.ToTable("Image");
                 entity.HasKey(i => i.Id);
                 entity.Property(i => i.Id).ValueGeneratedOnAdd();
@@ -217,9 +253,7 @@ namespace oMeli_Back.Context
                 entity.Property(i => i.UrlImg).IsRequired();
                 entity.Property(i => i.DateCreation).IsRequired();
 
-                entity.HasOne(i => i.Store)
-                .WithMany(s => s.Images)
-                .HasForeignKey(i => i.EntityId);
+                entity.HasOne(i => i.Store).WithMany(s => s.Images).HasForeignKey(i => i.EntityId);
             });
 
             modelBuilder.Entity<ProductCategoryEntity>(entity =>
@@ -228,7 +262,7 @@ namespace oMeli_Back.Context
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Description).IsRequired().HasMaxLength(256);
-                entity.Property(e => e.CreatedBy).IsRequired();
+                entity.Property(e => e.CreatedBy);
                 entity.Property(e => e.UpdatedBy);
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
                 entity
@@ -236,7 +270,63 @@ namespace oMeli_Back.Context
                     .HasDefaultValueSql("GETUTCDATE()")
                     .ValueGeneratedOnAdd();
                 entity.Property(e => e.UpdatedDate);
+
+                entity
+                    .HasMany(e => e.Subcategories)
+                    .WithOne(e => e.ProductCategory)
+                    .HasForeignKey(e => e.ProductCategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder
+                .Entity<ProductCategoryEntity>()
+                .HasData(
+                    new ProductCategoryEntity
+                    {
+                        Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                        Name = "Ropa",
+                        CreationDate = new DateTime(2025, 5, 16, 17, 41, 29, 995, DateTimeKind.Utc).AddTicks(4051),
+                    }
+                );
+
+            modelBuilder.Entity<ProductSubcategoryEntity>(entity =>
+            {
+                entity.ToTable("ProductSubcategories");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Description).HasMaxLength(256);
+                entity.Property(e => e.IsActive).HasDefaultValue(true);
+                entity
+                    .Property(e => e.CreationDate)
+                    .HasDefaultValueSql("GETUTCDATE()")
+                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.UpdatedDate);
+                entity.Property(e => e.CreatedBy);
+                entity.Property(e => e.UpdatedBy);
+
+                entity
+                    .HasOne(e => e.ProductCategory)
+                    .WithMany(c => c.Subcategories)
+                    .HasForeignKey(e => e.ProductCategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => new { e.ProductCategoryId, e.Name }).IsUnique();
+            });
+
+            var defaultCategoryId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+
+
+            modelBuilder
+                .Entity<ProductSubcategoryEntity>()
+                .HasData(
+                    new ProductSubcategoryEntity
+                    {
+                        Id = defaultCategoryId,
+                        ProductCategoryId = defaultCategoryId,
+                        CreationDate = new DateTime(2025, 5, 16, 17, 41, 29, 995, DateTimeKind.Utc).AddTicks(4051),
+                        Name = "General",
+                    }
+                );
         }
     }
 }
