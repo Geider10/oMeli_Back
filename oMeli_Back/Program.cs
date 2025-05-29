@@ -9,6 +9,8 @@ using oMeli_Back.Utils;
 using System.Text;
 using oMeli_Back.Services.Subscription;
 using oMeli_Back.Services.Interaction;
+using oMeli_Back.Services.ProductSubcategory;
+using oMeli_Back.Services.ProductCategory;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Connection");
@@ -25,6 +27,7 @@ builder.Services.AddScoped<StoreService>();
 builder.Services.AddScoped<ScheduleService>();
 builder.Services.AddScoped<PaymentMethodService>();
 builder.Services.AddScoped<FollowerService>();
+builder.Services.AddScoped<ProductSubcategoryService>();
 
 builder.Services.AddAuthentication(config =>
 {

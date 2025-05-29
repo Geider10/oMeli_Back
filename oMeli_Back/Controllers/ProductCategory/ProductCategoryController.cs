@@ -1,12 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using oMeli_Back.DTOs.ProductCategory;
 using oMeli_Back.Entities;
+using oMeli_Back.Services.ProductCategory;
 using oMeli_Back.Utils;
 using oMeli_Back.Validators.ProductCategory;
 
-namespace oMeli_Back.Controllers;
+namespace oMeli_Back.Controllers.ProductCategory;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -49,13 +49,12 @@ public class ProductCategoryController : ControllerBase
         {
             return StatusCode(500, new { message = "Internal server error" });
         }
-
     }
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ProductCategoryEntity), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetCategoryById(Guid id)
+    public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
     {
         try
         {
@@ -112,7 +111,7 @@ public class ProductCategoryController : ControllerBase
         {
             var validator = new UpdateProductCategoryDtoValidator();
             var validationResult = await validator.ValidateAsync(dto);
-            
+
             if (!validationResult.IsValid)
             {
                 return BadRequest(new { ok = false, errors = validationResult.Errors });
@@ -120,7 +119,6 @@ public class ProductCategoryController : ControllerBase
 
             var success = await _service.UpdateAsync(id, dto, userId.Value);
             return Ok(new { ok = true });
-
         }
         catch (KeyNotFoundException ex)
         {

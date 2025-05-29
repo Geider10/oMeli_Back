@@ -4,6 +4,8 @@ using oMeli_Back.Context;
 using oMeli_Back.DTOs.ProductCategory;
 using oMeli_Back.Entities;
 
+namespace oMeli_Back.Services.ProductCategory;
+
 public class ProductCategoryService
 {
     private readonly AppDBContext _context;
@@ -69,8 +71,8 @@ public class ProductCategoryService
     {
         try
         {
-            return await _context.ProductCategories
-                .AsNoTracking()
+            return await _context
+                .ProductCategories.AsNoTracking()
                 .Where(cat => cat.IsActive)
                 .ProjectToType<ReturnSimpleProductCategoryDto>()
                 .ToListAsync();
@@ -92,13 +94,19 @@ public class ProductCategoryService
                 bool nameExists = await this.checkNameAtUpdate(dto.Name, id);
                 if (nameExists)
                 {
-                    throw new InvalidOperationException("A category with this name already exists.");
+                    throw new InvalidOperationException(
+                        "A category with this name already exists."
+                    );
                 }
             }
 
-            dto.Adapt(category, TypeAdapterConfig<UpdateProductCategoryDto, ProductCategoryEntity>.NewConfig()
-                .IgnoreNullValues(true)
-                .Config);
+            dto.Adapt(
+                category,
+                TypeAdapterConfig<UpdateProductCategoryDto, ProductCategoryEntity>
+                    .NewConfig()
+                    .IgnoreNullValues(true)
+                    .Config
+            );
 
             category.UpdatedDate = DateTime.UtcNow;
             category.UpdatedBy = userId;
@@ -114,8 +122,9 @@ public class ProductCategoryService
 
     private async Task<bool> checkNameAtUpdate(string name, Guid id)
     {
-        var nameExists = await _context.ProductCategories
-            .AnyAsync(c => c.Name.ToLower() == name.ToLower() && c.Id != id);
+        var nameExists = await _context.ProductCategories.AnyAsync(c =>
+            c.Name.ToLower() == name.ToLower() && c.Id != id
+        );
         return nameExists;
     }
 }
